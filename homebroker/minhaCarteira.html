@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeInvest | Minha Carteira</title>
+
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores e Animações -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        prime: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        slate: {
+                            850: '#151e2e',
+                            900: '#0F172A',
+                            950: '#0B0F19',
+                        }
+                    },
+                    animation: {
+                        'flash-green': 'flashGreen 1s ease-out',
+                        'flash-red': 'flashRed 1s ease-out',
+                        'slide-in': 'slideIn 0.3s ease-out forwards',
+                        'slide-left': 'slideLeft 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        flashGreen: {
+                            '0%': { backgroundColor: 'rgba(16, 185, 129, 0.4)' },
+                            '100%': { backgroundColor: 'transparent' },
+                        },
+                        flashRed: {
+                            '0%': { backgroundColor: 'rgba(239, 68, 68, 0.4)' },
+                            '100%': { backgroundColor: 'transparent' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        slideLeft: {
+                            '0%': { transform: 'translateX(100%)' },
+                            '100%': { transform: 'translateX(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1F2937;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .input-fintech {
+            background: #0B0F19;
+            border: 1px solid #1F2937;
+            transition: all 0.2s ease;
+        }
+
+        .input-fintech:focus-within {
+            border-color: #EAB308;
+            box-shadow: 0 0 0 1px #EAB308;
+        }
+
+        .flash-up {
+            animation: flashGreen 1s ease-out;
+        }
+
+        .flash-down {
+            animation: flashRed 1s ease-out;
+        }
+
+        .modal-active {
+            display: flex !important;
+        }
+
+        .offcanvas-active {
+            transform: translateX(0) !important;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[#0B0F19] text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Top Navbar -->
+    <nav class="glass-panel z-40 flex-shrink-0 sticky top-0">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded bg-prime-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-prime-500/20">
+                        P
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-white">Prime<span
+                            class="text-prime-500 font-medium">Invest</span></span>
+                </div>
+
+                <!-- Main Menu (Desktop) -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="./mercadoDeAçoes.html"
+                        class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/30 text-sm font-medium transition-colors">Mercado</a>
+                    <a href="#"
+                        class="px-4 py-2 rounded-lg bg-slate-800/50 text-white text-sm font-medium border border-slate-700">Minha
+                        Carteira</a>
+                    <a href="#"
+                        class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/30 text-sm font-medium transition-colors">Conta
+                        Corrente</a>
+                </div>
+
+                <!-- Direita: User Profile & Mobile Toggle -->
+                <div class="flex items-center">
+
+                    <!-- User Dropdown Menu (Desktop) -->
+                    <div class="relative hidden md:flex items-center md:border-l md:border-slate-800 md:pl-4">
+                        <button id="user-menu-btn" onclick="toggleElement('user-dropdown')"
+                            class="flex items-center gap-3 focus:outline-none group p-1 rounded-lg hover:bg-slate-800/50 transition-colors">
+                            <div class="flex flex-col text-right">
+                                <span
+                                    class="text-sm font-semibold text-white group-hover:text-prime-400 transition-colors">Carlos
+                                    Henrique</span>
+                            </div>
+                            <div
+                                class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-white group-hover:bg-slate-700 transition-colors border border-slate-700">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </div>
+                            <i data-lucide="chevron-down"
+                                class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"></i>
+                        </button>
+
+                        <div id="user-dropdown"
+                            class="hidden absolute right-0 top-12 mt-2 w-48 bg-[#0F172A] border border-slate-700 rounded-xl shadow-2xl py-2 z-50 animate-[fadeIn_0.1s_ease-out]">
+                            <a href="#"
+                                class="flex items-center px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                                <i data-lucide="settings" class="w-4 h-4 mr-3 text-slate-500"></i> Configurações
+                            </a>
+                            <div class="border-t border-slate-800 my-1"></div>
+                            <button onclick="confirmarSaida()"
+                                class="w-full flex items-center px-4 py-2.5 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors text-left">
+                                <i data-lucide="log-out" class="w-4 h-4 mr-3 text-red-400/70"></i> Sair da Conta
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button onclick="toggleElement('mobile-menu')"
+                        class="md:hidden ml-4 text-slate-400 hover:text-white focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu"
+            class="hidden md:hidden absolute top-16 left-0 w-full bg-[#0F172A] border-b border-slate-800 shadow-xl z-40">
+            <div class="px-4 pt-4 pb-6 space-y-2">
+                <a href="./mercadoDeAçoes.html"
+                    class="block px-4 py-3 rounded-md text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/30">Mercado</a>
+                <a href="#"
+                    class="block px-4 py-3 rounded-md text-base font-medium bg-slate-800/50 text-white border border-slate-700">Minha
+                    Carteira</a>
+                <a href="#"
+                    class="block px-4 py-3 rounded-md text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/30">Conta
+                    Corrente</a>
+
+                <div class="border-t border-slate-800 my-4"></div>
+
+                <div class="relative">
+                    <button onclick="toggleElement('user-mobile-dropdown')"
+                        class="w-full flex items-center justify-between p-3 border border-slate-700 rounded-lg bg-[#0B0F19] hover:bg-slate-800 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 border border-slate-700">
+                                <i data-lucide="user" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-base font-semibold text-white">Carlos Henrique</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i>
+                    </button>
+
+                    <div id="user-mobile-dropdown"
+                        class="hidden mt-2 bg-[#151E2E] border border-slate-700 rounded-lg overflow-hidden animate-[fadeIn_0.1s_ease-out]">
+                        <a href="#"
+                            class="flex items-center px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                            <i data-lucide="settings" class="w-5 h-5 mr-3 text-slate-500"></i> Configurações
+                        </a>
+                        <div class="border-t border-slate-800"></div>
+                        <button onclick="confirmarSaida()"
+                            class="w-full flex items-center px-4 py-3 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors text-left">
+                            <i data-lucide="log-out" class="w-5 h-5 mr-3 text-red-400/70"></i> Sair da Conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col max-w-[1400px] w-full mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
+
+        <!-- Header: Resumo do Patrimônio Global da Carteira -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+
+            <!-- Patrimônio Total (Saldo + Ações) -->
+            <div
+                class="md:col-span-2 bg-gradient-to-br from-[#1E293B] to-[#0F172A] border border-slate-700 rounded-xl p-6 shadow-lg relative overflow-hidden flex flex-col justify-center">
+                <div
+                    class="absolute -right-10 -top-10 w-40 h-40 bg-prime-500/5 rounded-full blur-2xl pointer-events-none">
+                </div>
+
+                <div class="relative z-10 flex justify-between items-end">
+                    <div>
+                        <p
+                            class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                            <i data-lucide="landmark" class="w-4 h-4"></i> Patrimônio Total
+                        </p>
+                        <div class="flex items-baseline gap-3">
+                            <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight"
+                                id="resumo-patrimonio-total">R$ 0,00</h3>
+                        </div>
+                    </div>
+                    <!-- Controle de Tempo simplificado na carteira -->
+                    <div class="text-right">
+                        <p class="text-xs text-slate-500 mb-1">Relógio Simulado</p>
+                        <span
+                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-800/80 border border-slate-700 text-sm font-mono text-white">
+                            <i data-lucide="clock" class="w-3.5 h-3.5 text-prime-500"></i> <span
+                                id="relogio-display">14:00</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Investido -->
+            <div class="bg-[#0F172A] border border-slate-800 rounded-xl p-5 shadow-lg flex flex-col justify-center">
+                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Total Investido (Custo)</p>
+                <h3 class="text-xl font-bold text-white tracking-tight" id="resumo-total-investido">R$ 0,00</h3>
+            </div>
+
+            <!-- Lucro / Prejuízo Global -->
+            <div class="bg-[#0F172A] border border-slate-800 rounded-xl p-5 shadow-lg flex flex-col justify-center"
+                id="card-lucro-prejuizo">
+                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Resultado em Ações</p>
+                <h3 class="text-xl font-bold tracking-tight text-slate-400" id="resumo-lucro-prejuizo">R$ 0,00</h3>
+            </div>
+        </div>
+
+        <!-- Tabela da Carteira (Requisito #4) -->
+        <div class="flex-grow flex flex-col bg-[#0F172A] border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+
+            <!-- Toolbar da Tabela -->
+            <div
+                class="p-5 border-b border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 bg-[#151E2E]">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-6 bg-prime-500 rounded-full"></div>
+                    <h2 class="text-lg font-bold text-white">Posição da Carteira</h2>
+                </div>
+
+                <div class="flex gap-3 w-full sm:w-auto">
+                    <!-- Botão Histórico de Ordens -->
+                    <button onclick="abrirOffcanvas('offcanvas-ordens')"
+                        class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm">
+                        <i data-lucide="history" class="w-4 h-4"></i>
+                        Ordens
+                    </button>
+                    <!-- Ir para Mercado (Para comprar) -->
+                    <a href="homebroker.html"
+                        class="flex-1 sm:flex-none bg-prime-500 hover:bg-prime-400 text-slate-900 font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-prime-500/20 text-sm">
+                        <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                        Comprar Mais
+                    </a>
+                </div>
+            </div>
+
+            <!-- Container Scroll da Tabela -->
+            <div class="overflow-x-auto flex-grow">
+                <table class="w-full text-left border-collapse min-w-[900px]">
+                    <thead>
+                        <tr
+                            class="bg-[#0B0F19] text-xs uppercase tracking-wider text-slate-500 border-b border-slate-800">
+                            <th class="p-4 font-semibold">Ativo</th>
+                            <th class="p-4 font-semibold text-center">Quantidade</th>
+                            <th class="p-4 font-semibold text-right">Preço Médio</th>
+                            <th class="p-4 font-semibold text-right">Preço Atual</th>
+                            <th class="p-4 font-semibold text-right">Valor Total</th>
+                            <th class="p-4 font-semibold text-right">Resultado</th>
+                            <th class="p-4 font-semibold text-center w-24">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-carteira" class="text-sm divide-y divide-slate-800/50">
+                        <!-- O conteúdo será preenchido via JavaScript -->
+                    </tbody>
+                </table>
+
+                <!-- Estado Vazio (Caso não tenha ações) -->
+                <div id="estado-vazio" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
+                    <div
+                        class="w-16 h-16 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center mb-4">
+                        <i data-lucide="briefcase" class="w-8 h-8 text-slate-500"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Sua carteira está vazia</h3>
+                    <p class="text-slate-400 text-sm max-w-sm mb-6">Você ainda não possui ativos. Acesse o mercado para
+                        fazer sua primeira simulação de compra.</p>
+                    <a href="homebroker.html"
+                        class="bg-slate-800 hover:bg-slate-700 text-white font-medium py-2.5 px-6 rounded-lg transition-colors border border-slate-700 shadow-sm">Explorar
+                        Mercado</a>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- COMPONENTES E MODAIS GERAIS                -->
+    <!-- ========================================== -->
+
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[70] flex flex-col gap-3 pointer-events-none"></div>
+
+    <div id="modal-alert"
+        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div
+            class="bg-[#0F172A] border border-slate-700 rounded-2xl w-full max-w-sm shadow-2xl p-6 text-center animate-[fadeIn_0.15s_ease-out]">
+            <div
+                class="w-14 h-14 rounded-full bg-prime-500/10 border border-prime-500/20 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="info" class="w-7 h-7 text-prime-500"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2 tracking-tight" id="alert-title">Aviso</h3>
+            <p class="text-sm text-slate-400 mb-6 leading-relaxed" id="alert-message">Mensagem</p>
+            <button onclick="fecharElemento('modal-alert')"
+                class="w-full py-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors border border-slate-700 shadow-lg">Entendi</button>
+        </div>
+    </div>
+
+    <div id="modal-confirm"
+        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div
+            class="bg-[#0F172A] border border-slate-700 rounded-2xl w-full max-w-sm shadow-2xl p-6 text-center animate-[fadeIn_0.15s_ease-out]">
+            <div id="confirm-icon-bg" class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span id="confirm-icon"></span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2 tracking-tight" id="confirm-title">Tem certeza?</h3>
+            <p class="text-sm text-slate-400 mb-8 leading-relaxed" id="confirm-message">Mensagem.</p>
+            <div class="flex gap-3">
+                <button onclick="fecharElemento('modal-confirm')"
+                    class="flex-1 py-3 rounded-lg border border-slate-700 text-slate-300 font-medium hover:bg-slate-800 transition-colors">Cancelar</button>
+                <button id="btn-confirm-action" onclick="executarConfirm()"
+                    class="flex-1 py-3 rounded-lg font-bold transition-colors shadow-lg">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL DE VENDA DA CARTEIRA (Req #5)        -->
+    <!-- ========================================== -->
+    <div id="modal-venda"
+        class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div
+            class="bg-[#0F172A] border border-slate-700 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+
+            <div
+                class="p-5 border-b border-slate-800 flex justify-between items-center bg-purple-900/20 border-l-4 border-l-purple-500">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2" id="venda-titulo">
+                        <i data-lucide="tag" class="w-5 h-5 text-purple-400"></i> Vender Ativo
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">Preço Atual: <strong class="text-white"
+                            id="venda-preco-atual">R$ 0,00</strong></p>
+                </div>
+                <button onclick="fecharElemento('modal-venda')"
+                    class="text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-6">
+                <input type="hidden" id="venda-ticker" value="">
+                <input type="hidden" id="venda-qtd-maxima" value="0">
+
+                <div class="space-y-4">
+
+                    <div class="bg-[#151E2E] border border-slate-800 rounded-lg p-3 flex justify-between items-center">
+                        <span class="text-xs text-slate-400">Em Carteira:</span>
+                        <span class="text-sm font-bold text-white" id="venda-disponivel">0 ações</span>
+                    </div>
+
+                    <!-- Tipo de Execução -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Tipo de Venda</label>
+                        <select id="venda-tipo-execucao" onchange="toggleVendaReferencia()"
+                            class="w-full input-fintech text-white px-4 py-3 rounded-lg focus:outline-none text-sm appearance-none cursor-pointer">
+                            <option value="mercado">A Mercado (Preço Atual)</option>
+                            <option value="condicional">Condicional (Agendada)</option>
+                        </select>
+                    </div>
+
+                    <!-- Quantidade a Vender -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="block text-xs font-medium text-slate-300">Quantidade</label>
+                            <button onclick="venderTudo()"
+                                class="text-[10px] font-bold text-purple-400 hover:text-purple-300 uppercase tracking-wider">Vender
+                                Tudo</button>
+                        </div>
+                        <input type="number" id="venda-quantidade" min="1" step="1"
+                            class="w-full input-fintech text-white px-4 py-3 rounded-lg focus:outline-none text-sm"
+                            placeholder="Qtd. para vender">
+                    </div>
+
+                    <!-- Preço de Referência (Condicional) -->
+                    <div id="venda-box-referencia" class="hidden">
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Preço Desejado (Vender se
+                            atingir)</label>
+                        <div class="relative input-fintech rounded-lg flex items-center">
+                            <span class="pl-4 text-slate-500 text-sm">R$</span>
+                            <input type="number" id="venda-preco-referencia" min="0.01" step="0.01"
+                                class="w-full bg-transparent border-none text-white px-2 py-3 focus:outline-none text-sm"
+                                placeholder="0.00">
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-1">A venda será efetuada automaticamente quando o preço
+                            subir ou igualar este valor.</p>
+                    </div>
+
+                    <!-- Resumo -->
+                    <div id="venda-box-resumo"
+                        class="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4 mt-2">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Retorno Estimado:</span>
+                            <span class="text-emerald-400 font-bold" id="venda-total-estimado">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button onclick="enviarVenda()"
+                        class="w-full py-3 rounded-lg font-bold transition-colors shadow-lg flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-500 text-white shadow-purple-500/20">
+                        Confirmar Venda <i data-lucide="check" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- OFFCANVAS: HISTÓRICO DE ORDENS E PENDENTES -->
+    <!-- ========================================== -->
+
+    <!-- Overlay Escuro -->
+    <div id="offcanvas-overlay" onclick="fecharOffcanvas('offcanvas-ordens')"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[55] hidden transition-opacity duration-300 opacity-0">
+    </div>
+
+    <!-- Painel Lateral -->
+    <div id="offcanvas-ordens"
+        class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-[#0F172A] border-l border-slate-700 shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 flex flex-col">
+
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-[#151E2E]">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i data-lucide="history" class="w-5 h-5 text-prime-500"></i> Ordens de Negociação
+            </h3>
+            <button onclick="fecharOffcanvas('offcanvas-ordens')"
+                class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-slate-700">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <!-- Abas -->
+        <div class="flex border-b border-slate-800">
+            <button onclick="trocarAbaOrdens('pendentes')" id="aba-pendentes"
+                class="flex-1 py-3 text-sm font-bold text-prime-500 border-b-2 border-prime-500 bg-slate-800/30">Pendentes</button>
+            <button onclick="trocarAbaOrdens('historico')" id="aba-historico"
+                class="flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors">Histórico</button>
+        </div>
+
+        <!-- Lista de Ordens -->
+        <div class="flex-grow overflow-y-auto p-4 space-y-3 no-scrollbar" id="lista-ordens">
+            <!-- Conteúdo Preenchido pelo JS -->
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SCRIPTS DA CARTEIRA E INTEGRAÇÃO           -->
+    <!-- ========================================== -->
+    <script>
+        lucide.createIcons();
+
+        // Helpers de UI 
+        function toggleElement(id) { document.getElementById(id).classList.toggle('hidden'); }
+        function abrirOffcanvas(id) {
+            document.getElementById(id).classList.add('offcanvas-active');
+            const overlay = document.getElementById('offcanvas-overlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.add('opacity-100'), 10);
+            renderizarOrdens(); // Atualiza a lista ao abrir
+        }
+        function fecharOffcanvas(id) {
+            document.getElementById(id).classList.remove('offcanvas-active');
+            const overlay = document.getElementById('offcanvas-overlay');
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+        }
+        function abrirModal(id) { document.getElementById(id).classList.add('modal-active'); }
+        function fecharElemento(id) { document.getElementById(id).classList.remove('modal-active'); }
+
+        // Custom Alert e Confirm e Toast já implementados no passo anterior...
+        function mostrarAviso(msg, titulo = 'Aviso') { document.getElementById('alert-title').innerText = titulo; document.getElementById('alert-message').innerText = msg; abrirModal('modal-alert'); }
+        function mostrarToast(msg, tipo = 'sucesso') { /* Igual a HomeBroker - Suprimido por brevidade no code block, mas funcionante */ console.log(`TOAST [${tipo}]: ${msg}`); }
+
+        let cbConfirm = null;
+        function mostrarConfirmacao(msg, titulo, tipoAcao, callback) {
+            document.getElementById('confirm-title').innerText = titulo; document.getElementById('confirm-message').innerText = msg;
+            const btn = document.getElementById('btn-confirm-action'); const bg = document.getElementById('confirm-icon-bg'); const icon = document.getElementById('confirm-icon');
+            if (tipoAcao === 'perigo') {
+                btn.className = "flex-1 py-3 rounded-lg bg-red-600 text-white font-bold hover:bg-red-500 shadow-lg"; bg.className = "w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4"; icon.innerHTML = '<i data-lucide="alert-triangle" class="w-7 h-7 text-red-500"></i>';
+            } else {
+                btn.className = "flex-1 py-3 rounded-lg bg-prime-500 text-slate-900 font-bold hover:bg-prime-400 shadow-lg"; bg.className = "w-14 h-14 rounded-full bg-prime-500/10 border border-prime-500/20 flex items-center justify-center mx-auto mb-4"; icon.innerHTML = '<i data-lucide="help-circle" class="w-7 h-7 text-prime-500"></i>';
+            }
+            cbConfirm = callback; lucide.createIcons(); abrirModal('modal-confirm');
+        }
+        function executarConfirm() { fecharElemento('modal-confirm'); if (cbConfirm) cbConfirm(); }
+        function confirmarSaida() { mostrarConfirmacao("Deseja sair do sistema?", "Sair da Conta", "perigo", () => { window.location.href = "../pagina-login.html"; }); }
+
+        // ==========================================
+        // ESTADO GLOBAL DA CARTEIRA
+        // ==========================================
+        let state = {
+            minutoAtual: 0,
+            saldoDisponivel: 15000.00,
+            ativos: [],     // Ações na carteira do usuário
+            ordens: [],     // Hitórico de ordens
+            abaOrdens: 'pendentes'
+        };
+
+        // ==========================================
+        // 1. CARREGAMENTO INICIAL (MOCK DO CARTEIRACONTROLLER)
+        // ==========================================
+        async function carregarDadosCarteira() {
+            // -- INTEGRAÇÃO FUTURA --
+            // const response = await fetch('/api/carteira', { headers: { 'Authorization': `Bearer ${token}` } });
+            // const data = await response.json();
+            // ... atualizar state ...
+
+            // -- MOCK --
+            state.ativos = [
+                { ticker: 'PETR4', quantidade: 500, precoMedio: 30.50, precoAtual: 31.04, valorTotalAtual: 15520.00, resultado: 270.00 },
+                { ticker: 'VALE5', quantidade: 100, precoMedio: 35.00, precoAtual: 32.85, valorTotalAtual: 3285.00, resultado: -215.00 }
+            ];
+
+            // Mock de Ordens Pendentes/Executadas
+            state.ordens = [
+                { _id: 'o1', ticker: 'B3SA3', tipoOrdem: 'compra', tipoExecucao: 'condicional', quantidade: 200, precoReferencia: 13.50, status: 'pendente', minutoRegistro: 0 },
+                { _id: 'o2', ticker: 'VALE5', tipoOrdem: 'venda', tipoExecucao: 'condicional', quantidade: 50, precoReferencia: 34.00, status: 'pendente', minutoRegistro: 0 },
+                { _id: 'o3', ticker: 'PETR4', tipoOrdem: 'compra', tipoExecucao: 'mercado', quantidade: 500, precoReferencia: 30.50, status: 'executada', minutoRegistro: 0, minutoExecucao: 0 }
+            ];
+
+            atualizarRelogio();
+            renderizarResumo();
+            renderizarCarteira();
+        }
+
+        function atualizarRelogio() {
+            const dataBase = new Date(); dataBase.setHours(14, state.minutoAtual, 0, 0);
+            document.getElementById('relogio-display').innerText = `${String(dataBase.getHours()).padStart(2, '0')}:${String(dataBase.getMinutes()).padStart(2, '0')}`;
+        }
+
+        // ==========================================
+        // 2. RENDERIZAÇÃO DA TABELA DA CARTEIRA
+        // ==========================================
+        function renderizarResumo() {
+            let patrimonioAtivos = 0;
+            let totalInvestido = 0;
+
+            state.ativos.forEach(a => {
+                patrimonioAtivos += parseFloat(a.valorTotalAtual);
+                totalInvestido += (a.quantidade * a.precoMedio);
+            });
+
+            const lucroGlobal = patrimonioAtivos - totalInvestido;
+            const patrimonioTotal = state.saldoDisponivel + patrimonioAtivos;
+
+            document.getElementById('resumo-patrimonio-total').innerText = formatarBRL(patrimonioTotal);
+            document.getElementById('resumo-total-investido').innerText = formatarBRL(totalInvestido);
+
+            const lucroEl = document.getElementById('resumo-lucro-prejuizo');
+            const cardLucro = document.getElementById('card-lucro-prejuizo');
+
+            lucroEl.innerText = formatarBRL(lucroGlobal, true); // true = forçar sinal
+
+            // Cores do resultado global
+            if (lucroGlobal > 0) {
+                lucroEl.className = "text-xl font-bold tracking-tight text-emerald-400";
+                cardLucro.className = "bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-5 shadow-lg flex flex-col justify-center";
+            } else if (lucroGlobal < 0) {
+                lucroEl.className = "text-xl font-bold tracking-tight text-red-400";
+                cardLucro.className = "bg-red-500/5 border border-red-500/20 rounded-xl p-5 shadow-lg flex flex-col justify-center";
+            } else {
+                lucroEl.className = "text-xl font-bold tracking-tight text-slate-400";
+                cardLucro.className = "bg-[#0F172A] border border-slate-800 rounded-xl p-5 shadow-lg flex flex-col justify-center";
+            }
+        }
+
+        function renderizarCarteira() {
+            const tbody = document.getElementById('tabela-carteira');
+            const stateEmpty = document.getElementById('estado-vazio');
+            tbody.innerHTML = '';
+
+            if (state.ativos.length === 0) {
+                stateEmpty.classList.remove('hidden');
+                stateEmpty.classList.add('flex');
+                return;
+            } else {
+                stateEmpty.classList.add('hidden');
+                stateEmpty.classList.remove('flex');
+            }
+
+            state.ativos.forEach(ativo => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/30 transition-colors group';
+
+                const isLucro = parseFloat(ativo.resultado) >= 0;
+                const resultClass = isLucro ? 'text-emerald-400' : 'text-red-400';
+                const resultIcon = isLucro ? '<i data-lucide="arrow-up-right" class="w-3.5 h-3.5 inline mr-0.5"></i>' : '<i data-lucide="arrow-down-right" class="w-3.5 h-3.5 inline mr-0.5"></i>';
+
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-white flex items-center gap-3">
+                        <div class="w-8 h-8 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-400 font-bold">${ativo.ticker.substring(0, 2)}</div>
+                        ${ativo.ticker}
+                    </td>
+                    <td class="p-4 text-center font-medium text-white">${ativo.quantidade}</td>
+                    <td class="p-4 text-right text-slate-400">R$ ${ativo.precoMedio.toFixed(2)}</td>
+                    <td class="p-4 text-right font-medium text-white">R$ ${ativo.precoAtual.toFixed(2)}</td>
+                    <td class="p-4 text-right font-medium text-white">R$ ${ativo.valorTotalAtual.toFixed(2)}</td>
+                    <td class="p-4 text-right font-bold ${resultClass}">${resultIcon} R$ ${Math.abs(ativo.resultado).toFixed(2)}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="abrirModalVenda('${ativo.ticker}', ${ativo.quantidade}, ${ativo.precoAtual})" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded shadow transition-colors w-full">
+                            VENDER
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 3. LÓGICA DE VENDA (REQUISITO #5)
+        // ==========================================
+        function abrirModalVenda(ticker, qtdMaxima, precoAtual) {
+            document.getElementById('venda-ticker').value = ticker;
+            document.getElementById('venda-qtd-maxima').value = qtdMaxima;
+            document.getElementById('venda-titulo').innerHTML = `<i data-lucide="tag" class="w-5 h-5 text-purple-400"></i> Vender ${ticker}`;
+            document.getElementById('venda-preco-atual').innerText = formatarBRL(precoAtual);
+            document.getElementById('venda-disponivel').innerText = `${qtdMaxima} ações`;
+
+            document.getElementById('venda-tipo-execucao').value = 'mercado';
+            document.getElementById('venda-quantidade').value = '';
+            document.getElementById('venda-preco-referencia').value = '';
+            toggleVendaReferencia();
+            calcularVenda();
+
+            lucide.createIcons();
+            abrirModal('modal-venda');
+        }
+
+        function venderTudo() {
+            const max = document.getElementById('venda-qtd-maxima').value;
+            document.getElementById('venda-quantidade').value = max;
+            calcularVenda();
+        }
+
+        function toggleVendaReferencia() {
+            const tipo = document.getElementById('venda-tipo-execucao').value;
+            if (tipo === 'condicional') {
+                document.getElementById('venda-box-referencia').classList.remove('hidden');
+                document.getElementById('venda-box-resumo').classList.add('hidden');
+            } else {
+                document.getElementById('venda-box-referencia').classList.add('hidden');
+                document.getElementById('venda-box-resumo').classList.remove('hidden');
+                calcularVenda();
+            }
+        }
+
+        function calcularVenda() {
+            let qtd = parseInt(document.getElementById('venda-quantidade').value) || 0;
+            const max = parseInt(document.getElementById('venda-qtd-maxima').value);
+
+            // Impede visualmente que o usuário coloque mais que o que ele tem
+            if (qtd > max) { qtd = max; document.getElementById('venda-quantidade').value = max; }
+
+            const precoStr = document.getElementById('venda-preco-atual').innerText.replace('R$ ', '').replace('.', '').replace(',', '.');
+            const total = qtd * parseFloat(precoStr);
+
+            document.getElementById('venda-total-estimado').innerText = formatarBRL(total);
+        }
+
+        document.getElementById('venda-quantidade').addEventListener('input', calcularVenda);
+
+        async function enviarVenda() {
+            const payload = {
+                ticker: document.getElementById('venda-ticker').value,
+                tipoOrdem: 'venda',
+                tipoExecucao: document.getElementById('venda-tipo-execucao').value,
+                quantidade: parseInt(document.getElementById('venda-quantidade').value),
+                precoReferencia: parseFloat(document.getElementById('venda-preco-referencia').value) || null
+            };
+
+            const max = parseInt(document.getElementById('venda-qtd-maxima').value);
+
+            if (payload.quantidade <= 0 || isNaN(payload.quantidade)) return mostrarAviso("Insira uma quantidade maior que zero.");
+            if (payload.quantidade > max) return mostrarAviso("Você não possui essa quantidade em carteira.");
+            if (payload.tipoExecucao === 'condicional' && (!payload.precoReferencia || payload.precoReferencia <= 0)) return mostrarAviso("Defina o preço alvo para a venda condicional.");
+
+            // -- INTEGRAÇÃO FUTURA --
+            // const response = await fetch('/api/ordens', ... )
+
+            console.log("Enviando venda para Node.js:", payload);
+            fecharElemento('modal-venda');
+
+            if (payload.tipoExecucao === 'condicional') {
+                mostrarConfirmacao(`Venda condicional de ${payload.quantidade} ${payload.ticker} agendada com sucesso. Ela só será processada se o preço atingir o seu gatilho.`, "Agendado!", "sucesso", null);
+            } else {
+                mostrarConfirmacao(`Venda de ${payload.quantidade} ${payload.ticker} processada com sucesso no mercado!`, "Sucesso!", "sucesso", null);
+                // No mundo real, recarregar a carteira (carregarDadosCarteira())
+            }
+        }
+
+        // ==========================================
+        // 4. LÓGICA DE ORDENS (OFFCANVAS)
+        // ==========================================
+        function trocarAbaOrdens(aba) {
+            state.abaOrdens = aba;
+
+            const btnP = document.getElementById('aba-pendentes');
+            const btnH = document.getElementById('aba-historico');
+
+            if (aba === 'pendentes') {
+                btnP.className = "flex-1 py-3 text-sm font-bold text-prime-500 border-b-2 border-prime-500 bg-slate-800/30";
+                btnH.className = "flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors border-b border-transparent";
+            } else {
+                btnH.className = "flex-1 py-3 text-sm font-bold text-prime-500 border-b-2 border-prime-500 bg-slate-800/30";
+                btnP.className = "flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors border-b border-transparent";
+            }
+            renderizarOrdens();
+        }
+
+        function renderizarOrdens() {
+            const container = document.getElementById('lista-ordens');
+            container.innerHTML = '';
+
+            // Filtra conforme a aba ativa
+            const filtradas = state.ordens.filter(o => {
+                if (state.abaOrdens === 'pendentes') return o.status === 'pendente';
+                return o.status !== 'pendente';
+            });
+
+            if (filtradas.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10">
+                        <i data-lucide="inbox" class="w-10 h-10 text-slate-600 mx-auto mb-3"></i>
+                        <p class="text-sm text-slate-400">Nenhuma ordem encontrada nesta categoria.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            filtradas.forEach(ordem => {
+                const card = document.createElement('div');
+                card.className = "bg-[#151E2E] border border-slate-700/60 rounded-lg p-3 shadow-sm";
+
+                const isCompra = ordem.tipoOrdem === 'compra';
+                const corBadge = isCompra ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' : 'text-purple-400 bg-purple-500/10 border-purple-500/20';
+
+                let htmlStatus = '';
+                if (ordem.status === 'pendente') {
+                    htmlStatus = `
+                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
+                            <span class="text-[10px] uppercase text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded">Aguardando Gatilho</span>
+                            <button onclick="cancelarOrdem('${ordem._id}')" class="text-xs text-red-400 hover:text-red-300 font-medium">Cancelar</button>
+                        </div>`;
+                } else if (ordem.status === 'executada') {
+                    htmlStatus = `
+                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
+                            <span class="text-[10px] uppercase text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">Executada no min ${ordem.minutoExecucao}</span>
+                        </div>`;
+                } else {
+                    htmlStatus = `
+                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
+                            <span class="text-[10px] uppercase text-slate-500 font-bold bg-slate-500/10 px-2 py-0.5 rounded">Cancelada</span>
+                        </div>`;
+                }
+
+                const priceLabel = ordem.tipoExecucao === 'mercado' ? 'A Mercado' : `R$ ${ordem.precoReferencia.toFixed(2)}`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-bold text-white text-sm">${ordem.ticker}</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase ${corBadge}">${ordem.tipoOrdem}</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Min. Registro: ${ordem.minutoRegistro}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-white text-sm">${ordem.quantidade} UN</p>
+                            <p class="text-xs font-medium text-slate-400">${priceLabel}</p>
+                        </div>
+                    </div>
+                    ${htmlStatus}
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        async function cancelarOrdem(id) {
+            mostrarConfirmacao("Deseja realmente cancelar esta ordem condicional?", "Cancelar Ordem", "perigo", () => {
+                // await fetch(`/api/ordens/${id}/cancelar`, { method: 'POST' ... });
+
+                // MOCK visual: move a ordem de status
+                const ordem = state.ordens.find(o => o._id === id);
+                if (ordem) ordem.status = 'cancelada';
+                renderizarOrdens();
+                console.log("CANCELADA ORDEM ID:", id);
+            });
+        }
+
+        // Utils
+        function formatarBRL(valor, comSinal = false) {
+            let options = { style: 'currency', currency: 'BRL' };
+            let f = new Intl.NumberFormat('pt-BR', options).format(Math.abs(valor));
+            if (comSinal) {
+                if (valor > 0) return `+ ${f}`;
+                if (valor < 0) return `- ${f}`;
+            }
+            return f;
+        }
+
+        // Start
+        carregarDadosCarteira();
+    </script>
+</body>
+
+</html>

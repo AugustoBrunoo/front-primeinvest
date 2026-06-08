@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeInvest | Criar Conta</title>
+
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        prime: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        slate: {
+                            850: '#151e2e',
+                            900: '#0F172A',
+                            950: '#0B0F19',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .input-fintech {
+            background: #0B0F19;
+            border: 1px solid #1F2937;
+            transition: all 0.2s ease;
+        }
+
+        .input-fintech:focus-within {
+            border-color: #EAB308;
+            box-shadow: 0 0 0 1px #EAB308;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-950 text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Elementos Decorativos de Fundo -->
+    <div
+        class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-prime-500/5 blur-[120px] rounded-full pointer-events-none">
+    </div>
+    <div
+        class="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none">
+    </div>
+
+    <!-- Navbar Minimalista -->
+    <nav class="absolute w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <!-- Logo PrimeInvest -->
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer group">
+                    <div
+                        class="w-9 h-9 rounded-lg bg-prime-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-prime-500/20 group-hover:scale-105 transition-transform">
+                        P
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-white">Prime<span
+                            class="text-prime-500 font-medium">Invest</span></span>
+                </a>
+
+                <!-- Voltar ao Início -->
+                <a href="index.html"
+                    class="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    Voltar
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex justify-center px-4 relative z-10 pt-32 pb-16">
+
+        <!-- Aumentado para max-w-5xl para suportar as duas colunas -->
+        <div class="w-full max-w-5xl my-auto">
+
+            <!-- Formulário de Registro e Benefícios (Estado 1) -->
+            <div id="register-container" class="transition-all duration-500">
+                <div
+                    class="bg-[#0F172A]/90 backdrop-blur-md border border-slate-800 rounded-3xl shadow-2xl flex flex-col lg:flex-row overflow-hidden">
+
+                    <!-- COLUNA ESQUERDA: Formulário -->
+                    <div class="p-8 sm:p-10 lg:w-3/5 relative">
+                        <div class="mb-8 text-center lg:text-left">
+                            <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">Crie sua conta</h1>
+                            <p class="text-slate-400 text-sm">
+                                Dê o primeiro passo no simulador de mercado com a chancela <strong
+                                    class="text-purple-400 font-semibold">PrimeBank</strong>.
+                            </p>
+                        </div>
+
+                        <!-- Box de Erro Backend -->
+                        <div id="error-box"
+                            class="hidden mb-5 bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-start gap-3">
+                            <i data-lucide="alert-circle" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>
+                            <p id="error-message" class="text-sm text-red-200">Mensagem de erro aqui.</p>
+                        </div>
+
+                        <form id="register-form" class="space-y-4">
+
+                            <!-- Campo Nome -->
+                            <div>
+                                <label for="nome" class="block text-sm font-medium text-slate-300 mb-1.5">Nome
+                                    Completo</label>
+                                <div class="relative input-fintech rounded-lg flex items-center">
+                                    <div class="pl-4 text-slate-500">
+                                        <i data-lucide="user" class="w-5 h-5"></i>
+                                    </div>
+                                    <input type="text" id="nome"
+                                        class="w-full bg-transparent border-none text-white px-3 py-3 focus:outline-none placeholder-slate-600 text-sm"
+                                        placeholder="Ex: Carlos Henrique" required>
+                                </div>
+                            </div>
+
+                            <!-- Campo E-mail -->
+                            <div>
+                                <label for="email"
+                                    class="block text-sm font-medium text-slate-300 mb-1.5">E-mail</label>
+                                <div class="relative input-fintech rounded-lg flex items-center">
+                                    <div class="pl-4 text-slate-500">
+                                        <i data-lucide="mail" class="w-5 h-5"></i>
+                                    </div>
+                                    <input type="email" id="email"
+                                        class="w-full bg-transparent border-none text-white px-3 py-3 focus:outline-none placeholder-slate-600 text-sm"
+                                        placeholder="seu.email@exemplo.com" required>
+                                </div>
+                            </div>
+
+                            <!-- Grid para Senhas (Lado a lado em telas maiores) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Nova Senha -->
+                                <div>
+                                    <label for="password"
+                                        class="block text-sm font-medium text-slate-300 mb-1.5">Senha</label>
+                                    <div class="relative input-fintech rounded-lg flex items-center">
+                                        <div class="pl-4 text-slate-500">
+                                            <i data-lucide="lock" class="w-5 h-5"></i>
+                                        </div>
+                                        <input type="password" id="password"
+                                            class="w-full bg-transparent border-none text-white px-3 py-3 focus:outline-none placeholder-slate-600 text-sm"
+                                            placeholder="••••••••" required>
+
+                                        <button type="button"
+                                            class="toggle-password pr-4 text-slate-500 hover:text-slate-300 focus:outline-none"
+                                            data-target="password">
+                                            <i data-lucide="eye" class="w-5 h-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Repetir Nova Senha -->
+                                <div>
+                                    <label for="password-confirm"
+                                        class="block text-sm font-medium text-slate-300 mb-1.5">Confirmar Senha</label>
+                                    <div class="relative input-fintech rounded-lg flex items-center">
+                                        <div class="pl-4 text-slate-500">
+                                            <i data-lucide="lock-keyhole" class="w-5 h-5"></i>
+                                        </div>
+                                        <input type="password" id="password-confirm"
+                                            class="w-full bg-transparent border-none text-white px-3 py-3 focus:outline-none placeholder-slate-600 text-sm"
+                                            placeholder="••••••••" required>
+
+                                        <button type="button"
+                                            class="toggle-password pr-4 text-slate-500 hover:text-slate-300 focus:outline-none"
+                                            data-target="password-confirm">
+                                            <i data-lucide="eye" class="w-5 h-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Barra de Força da Senha -->
+                            <div class="mt-2 mb-4">
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <span class="text-xs text-slate-400 font-medium">Nível da senha:</span>
+                                    <span id="strength-text" class="text-xs font-bold text-slate-500"></span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                    <div id="strength-bar" class="h-full w-0 transition-all duration-500 ease-out">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Regras da Senha (Visual) -->
+                            <div
+                                class="bg-[#0B0F19] rounded-lg p-3 border border-slate-800 flex flex-wrap gap-x-4 gap-y-2">
+                                <ul
+                                    class="w-full flex flex-wrap text-[11px] text-slate-500 font-medium justify-between">
+                                    <li id="rule-length" class="flex items-center gap-1 w-[48%]"><i data-lucide="x"
+                                            class="w-3 h-3"></i> 8+ caracteres</li>
+                                    <li id="rule-letter" class="flex items-center gap-1 w-[48%]"><i data-lucide="x"
+                                            class="w-3 h-3"></i> Uma letra</li>
+                                    <li id="rule-number" class="flex items-center gap-1 w-[48%]"><i data-lucide="x"
+                                            class="w-3 h-3"></i> Um número</li>
+                                    <li id="rule-match" class="flex items-center gap-1 w-[48%]"><i data-lucide="x"
+                                            class="w-3 h-3"></i> Senhas iguais</li>
+                                </ul>
+                            </div>
+
+                            <!-- Termos e Condições -->
+                            <div class="flex items-start mt-4">
+                                <div class="flex items-center h-5">
+                                    <input id="termos" type="checkbox" required
+                                        class="w-4 h-4 border border-slate-600 rounded bg-[#0B0F19] checked:bg-prime-500 checked:border-prime-500 focus:ring-prime-500/50 cursor-pointer accent-prime-500">
+                                </div>
+                                <label for="termos" class="ml-2 text-xs text-slate-400 leading-tight">
+                                    Concordo com os <a href="#" class="text-prime-500 hover:underline">Termos de Uso</a>
+                                    e entendo que este é um <strong class="text-white">Simulador Acadêmico</strong>.
+                                </label>
+                            </div>
+
+                            <!-- Botão Submit -->
+                            <button type="submit" id="submit-btn" disabled
+                                class="w-full bg-slate-700 text-slate-400 cursor-not-allowed font-semibold py-3.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 mt-2">
+                                <span>Concluir Cadastro</span>
+                                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- COLUNA DIREITA: Benefícios & Call to Action Login -->
+                    <div
+                        class="bg-gradient-to-br from-[#0B0F19] to-slate-900 border-t lg:border-t-0 lg:border-l border-slate-800 p-8 sm:p-10 lg:w-2/5 flex flex-col relative overflow-hidden">
+
+                        <!-- Efeito de luz sutil no canto -->
+                        <div
+                            class="absolute top-0 right-0 w-64 h-64 bg-prime-500/5 blur-[80px] rounded-full pointer-events-none">
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-white mb-8">A Experiência PrimeInvest</h3>
+
+                        <div class="space-y-6 flex-grow">
+                            <!-- Benefício 1 -->
+                            <div class="flex gap-4">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-prime-500/10 border border-prime-500/20 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="line-chart" class="w-5 h-5 text-prime-500"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-white mb-1">Mercado em Tempo Real</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Cotações dinâmicas e execução de
+                                        ordens com o nosso motor de processamento realista.</p>
+                                </div>
+                            </div>
+
+                            <!-- Benefício 2 -->
+                            <div class="flex gap-4">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-prime-500/10 border border-prime-500/20 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="gift" class="w-5 h-5 text-prime-500"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-white mb-1">10 Ativos Iniciais Grátis</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Comece já com uma carteira. Nossa
+                                        IA sorteia 10 ativos aleatórios assim que abrir a conta.</p>
+                                </div>
+                            </div>
+
+                            <!-- Benefício 3 -->
+                            <div class="flex gap-4">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center flex-shrink-0">
+                                    <div
+                                        class="w-5 h-5 rounded bg-purple-600 flex items-center justify-center text-white font-bold text-[8px]">
+                                        P</div>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-white mb-1">Ecossistema PrimeBank</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Integração nativa com o banco.
+                                        Seus saldos sincronizados e seguros numa única conta.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botão Já tem conta super elegante (Rodapé da Coluna) -->
+                        <div class="mt-12 pt-8 border-t border-slate-800/80 relative z-10">
+                            <p class="text-xs text-slate-400 mb-3 text-center lg:text-left">Já faz parte da nossa
+                                plataforma?</p>
+                            <a href="./pagina-login.html"
+                                class="w-full bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-prime-500/50 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group">
+                                <span>Acessar minha conta</span>
+                                <i data-lucide="log-in"
+                                    class="w-4 h-4 text-slate-400 group-hover:text-prime-500 transition-colors"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Container de Sucesso (Estado 2) -->
+            <div id="success-container"
+                class="hidden text-center transition-all duration-500 opacity-0 scale-95 max-w-lg mx-auto">
+                <div
+                    class="bg-[#0F172A]/90 backdrop-blur-md border border-prime-500/30 rounded-2xl shadow-[0_0_50px_-10px_rgba(234,179,8,0.25)] p-8 sm:p-10 relative overflow-hidden">
+
+                    <!-- Efeito de Brilho de Sucesso -->
+                    <div
+                        class="absolute -top-20 -right-20 w-40 h-40 bg-prime-500/20 blur-[50px] rounded-full pointer-events-none">
+                    </div>
+
+                    <div
+                        class="w-20 h-20 bg-prime-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-prime-500/20">
+                        <i data-lucide="party-popper" class="w-10 h-10 text-prime-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-3">Conta Criada!</h2>
+
+                    <!-- Mensagem customizada baseada no Backend (10 ações) -->
+                    <div class="bg-[#0B0F19] border border-slate-800 rounded-xl p-4 mb-8 text-left">
+                        <p class="text-sm text-slate-300 leading-relaxed mb-3">
+                            Bem-vindo(a), <strong id="success-name" class="text-white">Usuário</strong>! Seu cadastro
+                            foi concluído com sucesso.
+                        </p>
+                        <div class="flex items-start gap-3 p-3 bg-prime-500/5 border border-prime-500/20 rounded-lg">
+                            <i data-lucide="gift" class="w-5 h-5 text-prime-500 flex-shrink-0 mt-0.5"></i>
+                            <p class="text-xs text-slate-400">
+                                <strong class="text-prime-400">Bónus de Início:</strong> Nosso sistema acabou de sortear
+                                e adicionar <strong class="text-white">10 ativos aleatórios</strong> à sua carteira de
+                                simulação para começar a operar!
+                            </p>
+                        </div>
+                    </div>
+
+                    <a href="./pagina-login.html"
+                        class="inline-flex w-full justify-center bg-prime-500 hover:bg-prime-400 text-slate-900 font-semibold py-3.5 px-4 rounded-lg transition-colors shadow-lg shadow-prime-500/20 items-center gap-2">
+                        <span>Acessar Plataforma</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="py-6 text-center text-xs text-slate-600 relative z-10">
+        <p>&copy; 2026 PrimeInvest. Ambiente acadêmico seguro e criptografado.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        // 1. Elementos do DOM
+        const form = document.getElementById('register-form');
+        const nomeInput = document.getElementById('nome');
+        const emailInput = document.getElementById('email');
+        const pwdInput = document.getElementById('password');
+        const pwdConfirmInput = document.getElementById('password-confirm');
+        const termosInput = document.getElementById('termos');
+        const submitBtn = document.getElementById('submit-btn');
+
+        const errorBox = document.getElementById('error-box');
+        const errorMessage = document.getElementById('error-message');
+
+        const registerContainer = document.getElementById('register-container');
+        const successContainer = document.getElementById('success-container');
+
+        // Regex do Backend do Professor
+        const regexLetra = /.*[a-zA-Z].*/;
+        const regexNumero = /.*[0-9].*/;
+        // Regex de email adaptado para JS Frontend (equivalente ao do backend)
+        const regexEmail = /^[A-Za-z0-9._%-]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,4}$/;
+
+        // 2. Toggle Mostrar Senha
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+
+                const iconName = type === 'password' ? 'eye' : 'eye-off';
+                this.innerHTML = `<i data-lucide="${iconName}" class="w-5 h-5"></i>`;
+                lucide.createIcons();
+            });
+        });
+
+        // 3. Validação Dinâmica e Medidor de Força
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthText = document.getElementById('strength-text');
+
+        function checkFormValidity() {
+            const nome = nomeInput.value.trim();
+            const email = emailInput.value.trim();
+            const pwd = pwdInput.value;
+            const confirm = pwdConfirmInput.value;
+            const termos = termosInput.checked;
+
+            // Validações individuais
+            const isNomeValid = nome.length > 0;
+            const isEmailValid = regexEmail.test(email);
+
+            // Regras de Senha
+            let isLengthValid = pwd.length >= 8;
+            let isLetterValid = regexLetra.test(pwd);
+            let isNumberValid = regexNumero.test(pwd);
+            let isMatchValid = pwd === confirm && pwd !== '';
+
+            updateStrengthMeter(pwd);
+            updateRuleUI('rule-length', isLengthValid);
+            updateRuleUI('rule-letter', isLetterValid);
+            updateRuleUI('rule-number', isNumberValid);
+            updateRuleUI('rule-match', isMatchValid);
+
+            // Verifica se TUDO está válido
+            const isFormValid = isNomeValid && isEmailValid && isLengthValid && isLetterValid && isNumberValid && isMatchValid && termos;
+
+            if (isFormValid) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+                submitBtn.classList.add('bg-prime-500', 'hover:bg-prime-400', 'text-slate-900', 'shadow-lg', 'shadow-prime-500/20');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+                submitBtn.classList.remove('bg-prime-500', 'hover:bg-prime-400', 'text-slate-900', 'shadow-lg', 'shadow-prime-500/20');
+            }
+        }
+
+        function updateRuleUI(elementId, isValid) {
+            const el = document.getElementById(elementId);
+            if (isValid) {
+                el.classList.remove('text-slate-500');
+                el.classList.add('text-emerald-500');
+                el.innerHTML = `<i data-lucide="check" class="w-3 h-3"></i> ${el.innerText}`;
+            } else {
+                el.classList.add('text-slate-500');
+                el.classList.remove('text-emerald-500');
+                el.innerHTML = `<i data-lucide="x" class="w-3 h-3"></i> ${el.innerText}`;
+            }
+            lucide.createIcons();
+        }
+
+        function updateStrengthMeter(pwd) {
+            if (!pwd) {
+                strengthBar.style.width = '0%';
+                strengthBar.className = 'h-full w-0 transition-all duration-500 ease-out';
+                strengthText.textContent = '';
+                return;
+            }
+
+            let score = 0;
+            if (pwd.length > 0) score += 10;
+            if (pwd.length >= 8) score += 20;
+            if (pwd.length >= 12) score += 10;
+            if (/[a-z]/.test(pwd)) score += 15;
+            if (/[A-Z]/.test(pwd)) score += 15;
+            if (/[0-9]/.test(pwd)) score += 15;
+            if (/[^A-Za-z0-9]/.test(pwd)) score += 15;
+
+            let width, colorClass, text;
+
+            if (score < 30) {
+                width = '20%'; colorClass = 'bg-red-500'; text = 'Muito Fraca';
+            } else if (score < 50) {
+                width = '40%'; colorClass = 'bg-orange-500'; text = 'Fraca';
+            } else if (score < 70) {
+                width = '60%'; colorClass = 'bg-yellow-400'; text = 'Boa';
+            } else if (score < 90) {
+                width = '80%'; colorClass = 'bg-lime-400'; text = 'Muito Boa';
+            } else {
+                width = '100%'; colorClass = 'bg-emerald-500'; text = 'Excelente';
+            }
+
+            strengthBar.style.width = width;
+            strengthBar.className = `h-full transition-all duration-500 ease-out ${colorClass}`;
+            strengthText.textContent = text;
+            strengthText.className = `text-xs font-bold ${colorClass.replace('bg-', 'text-')}`;
+        }
+
+        // Adiciona os eventos para checar o form inteiro
+        nomeInput.addEventListener('input', checkFormValidity);
+        emailInput.addEventListener('input', checkFormValidity);
+        pwdInput.addEventListener('input', checkFormValidity);
+        pwdConfirmInput.addEventListener('input', checkFormValidity);
+        termosInput.addEventListener('change', checkFormValidity);
+
+        // 4. Submissão (Integração com Backend mockada)
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorBox.classList.add('hidden');
+
+            const nome = nomeInput.value.trim();
+            const email = emailInput.value.trim();
+            const senha = pwdInput.value;
+            const senhaRepetida = pwdConfirmInput.value;
+
+            // Estado de Carregamento
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Criando conta...</span>`;
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            lucide.createIcons();
+
+            // ==========================================
+            // INTEGRAÇÃO FUTURA COM SEU NODE.JS
+            // Rota: const registrar = async (req, res) => {...}
+            // ==========================================
+            /*
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/registrar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, email, senha, senhaRepetida })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Erro ao registrar usuário.");
+                }
+
+                // SUCESSO! Mostra a tela de sucesso.
+                showSuccessState(nome);
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorBox.classList.remove('hidden');
+                
+                // Restaura o botão
+                submitBtn.innerHTML = originalContent;
+                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+                lucide.createIcons();
+            }
+            */
+
+            // ==========================================
+            // MOCK PARA VISUALIZAÇÃO ATUAL (Remova após ligar a API)
+            // ==========================================
+            setTimeout(() => {
+                // Brincadeira para testar a caixa de erro: 
+                // Se o usuário digitar um email que "já existe no banco"
+                if (email === "teste@teste.com") {
+                    errorMessage.textContent = "Já existe um usuário registrado com este e-mail.";
+                    errorBox.classList.remove('hidden');
+                    submitBtn.innerHTML = originalContent;
+                    submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+                    lucide.createIcons();
+                    return;
+                }
+
+                // Caso sucesso real
+                showSuccessState(nome);
+            }, 1500);
+        });
+
+        function showSuccessState(nome) {
+            // Pega apenas o primeiro nome para a mensagem
+            const primeiroNome = nome.split(' ')[0];
+            document.getElementById('success-name').textContent = primeiroNome;
+
+            registerContainer.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                registerContainer.classList.add('hidden');
+                successContainer.classList.remove('hidden');
+
+                setTimeout(() => {
+                    successContainer.classList.remove('opacity-0', 'scale-95');
+                    successContainer.classList.add('opacity-100', 'scale-100');
+                }, 50);
+
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeInvest | Home Broker</title>
+
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores e Animações -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        prime: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        slate: {
+                            850: '#151e2e',
+                            900: '#0F172A',
+                            950: '#0B0F19',
+                        }
+                    },
+                    animation: {
+                        'flash-green': 'flashGreen 1s ease-out',
+                        'flash-red': 'flashRed 1s ease-out',
+                        'slide-in': 'slideIn 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        flashGreen: {
+                            '0%': { backgroundColor: 'rgba(16, 185, 129, 0.4)' },
+                            '100%': { backgroundColor: 'transparent' },
+                        },
+                        flashRed: {
+                            '0%': { backgroundColor: 'rgba(239, 68, 68, 0.4)' },
+                            '100%': { backgroundColor: 'transparent' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Scrollbar customizada para tabelas e página */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1F2937;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .input-fintech {
+            background: #0B0F19;
+            border: 1px solid #1F2937;
+            transition: all 0.2s ease;
+        }
+
+        .input-fintech:focus-within {
+            border-color: #EAB308;
+            box-shadow: 0 0 0 1px #EAB308;
+        }
+
+        .flash-up {
+            animation: flashGreen 1s ease-out;
+        }
+
+        .flash-down {
+            animation: flashRed 1s ease-out;
+        }
+
+        /* Utilitários para Modais e Menus */
+        .modal-active {
+            display: flex !important;
+        }
+
+        .dropdown-active {
+            display: block !important;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[#0B0F19] text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Top Navbar -->
+    <nav class="glass-panel z-40 flex-shrink-0 sticky top-0">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded bg-prime-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-prime-500/20">
+                        P
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-white">Prime<span
+                            class="text-prime-500 font-medium">Invest</span></span>
+                </div>
+
+                <!-- Main Menu (Desktop) -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#"
+                        class="px-4 py-2 rounded-lg bg-slate-800/50 text-white text-sm font-medium border border-slate-700">Mercado</a>
+                    <a href="./minhaCarteira.html"
+                        class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/30 text-sm font-medium transition-colors">Minha
+                        Carteira</a>
+                    <a href="#"
+                        class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/30 text-sm font-medium transition-colors">Conta
+                        Corrente</a>
+                </div>
+
+                <!-- Direita: User Profile & Mobile Toggle -->
+                <div class="flex items-center">
+
+                    <!-- User Dropdown Menu (Escondido no Mobile) -->
+                    <div class="relative hidden md:flex items-center md:border-l md:border-slate-800 md:pl-4">
+                        <button id="user-menu-btn" onclick="toggleDropdown('user-dropdown')"
+                            class="flex items-center gap-3 focus:outline-none group p-1 rounded-lg hover:bg-slate-800/50 transition-colors">
+                            <div class="flex flex-col text-right">
+                                <span
+                                    class="text-sm font-semibold text-white group-hover:text-prime-400 transition-colors">Carlos
+                                    Henrique</span>
+                            </div>
+                            <div
+                                class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-white group-hover:bg-slate-700 transition-colors border border-slate-700">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </div>
+                            <i data-lucide="chevron-down"
+                                class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"></i>
+                        </button>
+
+                        <!-- Painel Dropdown do Usuário (Desktop) -->
+                        <div id="user-dropdown"
+                            class="hidden absolute right-0 top-12 mt-2 w-48 bg-[#0F172A] border border-slate-700 rounded-xl shadow-2xl py-2 z-50 animate-[fadeIn_0.1s_ease-out]">
+                            <a href="#"
+                                class="flex items-center px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                                <i data-lucide="settings" class="w-4 h-4 mr-3 text-slate-500"></i> Configurações
+                            </a>
+                            <div class="border-t border-slate-800 my-1"></div>
+                            <button onclick="confirmarSaida()"
+                                class="w-full flex items-center px-4 py-2.5 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors text-left">
+                                <i data-lucide="log-out" class="w-4 h-4 mr-3 text-red-400/70"></i> Sair da Conta
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button onclick="toggleDropdown('mobile-menu')"
+                        class="md:hidden ml-4 text-slate-400 hover:text-white focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu"
+            class="hidden md:hidden absolute top-16 left-0 w-full bg-[#0F172A] border-b border-slate-800 shadow-xl z-40">
+            <div class="px-4 pt-4 pb-6 space-y-2">
+                <a href="#"
+                    class="block px-4 py-3 rounded-md text-base font-medium bg-slate-800/50 text-white border border-slate-700">Mercado</a>
+                <a href="./minhaCarteira.html"
+                    class="block px-4 py-3 rounded-md text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/30">Minha
+                    Carteira</a>
+                <a href="#"
+                    class="block px-4 py-3 rounded-md text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/30">Conta
+                    Corrente</a>
+
+                <div class="border-t border-slate-800 my-4"></div>
+
+                <!-- Perfil do Usuário Mobile -->
+                <div class="relative">
+                    <button onclick="toggleDropdown('user-mobile-dropdown')"
+                        class="w-full flex items-center justify-between p-3 border border-slate-700 rounded-lg bg-[#0B0F19] hover:bg-slate-800 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 border border-slate-700">
+                                <i data-lucide="user" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-base font-semibold text-white">Carlos Henrique</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i>
+                    </button>
+
+                    <!-- Dropdown Mobile -->
+                    <div id="user-mobile-dropdown"
+                        class="hidden mt-2 bg-[#151E2E] border border-slate-700 rounded-lg overflow-hidden animate-[fadeIn_0.1s_ease-out]">
+                        <a href="#"
+                            class="flex items-center px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                            <i data-lucide="settings" class="w-5 h-5 mr-3 text-slate-500"></i> Configurações
+                        </a>
+                        <div class="border-t border-slate-800"></div>
+                        <button onclick="confirmarSaida()"
+                            class="w-full flex items-center px-4 py-3 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors text-left">
+                            <i data-lucide="log-out" class="w-5 h-5 mr-3 text-red-400/70"></i> Sair da Conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col max-w-[1400px] w-full mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
+
+        <!-- Header Widgets (Saldo, Patrimônio, Relógio) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+            <!-- Saldo Disponível -->
+            <div
+                class="bg-[#0F172A] border border-slate-800 rounded-xl p-5 flex items-center justify-between shadow-lg">
+                <div>
+                    <p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1">Saldo Conta Corrente</p>
+                    <h3 class="text-2xl font-bold text-white tracking-tight" id="saldo-geral">R$ 15.000,00</h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <i data-lucide="wallet" class="w-6 h-6 text-emerald-500"></i>
+                </div>
+            </div>
+
+            <!-- Patrimônio Investido -->
+            <div
+                class="bg-[#0F172A] border border-slate-800 rounded-xl p-5 flex items-center justify-between shadow-lg">
+                <div>
+                    <p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1">Patrimônio em Ações</p>
+                    <h3 class="text-2xl font-bold text-white tracking-tight" id="patrimonio-acoes">R$ 0,00</h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-full bg-prime-500/10 border border-prime-500/20 flex items-center justify-center">
+                    <i data-lucide="pie-chart" class="w-6 h-6 text-prime-500"></i>
+                </div>
+            </div>
+
+            <!-- Controle do Tempo (Relógio do Simulador) -->
+            <div
+                class="bg-gradient-to-br from-[#1E293B] to-[#0F172A] border border-slate-700 rounded-xl p-5 flex items-center justify-between shadow-lg relative overflow-hidden">
+                <!-- Efeito visual no card de tempo -->
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/10 rounded-full blur-xl pointer-events-none">
+                </div>
+
+                <div class="relative z-10">
+                    <p
+                        class="text-xs font-medium text-slate-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <i data-lucide="clock" class="w-3.5 h-3.5"></i> Horário Mercado
+                    </p>
+                    <h3 class="text-2xl font-bold text-white tracking-tight font-mono" id="relogio-display">14:00</h3>
+                </div>
+                <div class="flex gap-2 relative z-10">
+                    <button onclick="avancarTempo(1)"
+                        class="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white transition-colors shadow-sm flex items-center gap-1">
+                        +1 min
+                    </button>
+                    <button onclick="avancarTempo(5)"
+                        class="px-3 py-1.5 rounded bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 text-xs font-bold text-blue-400 transition-colors shadow-sm flex items-center gap-1">
+                        +5 min
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela do Mercado -->
+        <div class="flex-grow flex flex-col bg-[#0F172A] border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+
+            <!-- Toolbar da Tabela -->
+            <div
+                class="p-5 border-b border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 bg-[#151E2E]">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-6 bg-prime-500 rounded-full"></div>
+                    <h2 class="text-lg font-bold text-white">Mercado de Ações</h2>
+                </div>
+                <button onclick="abrirModal('modal-adicionar-acao')"
+                    class="w-full sm:w-auto bg-prime-500 hover:bg-prime-400 text-slate-900 font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-prime-500/20 text-sm">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    Adicionar Ação
+                </button>
+            </div>
+
+            <!-- Container Scroll da Tabela -->
+            <div class="overflow-x-auto flex-grow">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr
+                            class="bg-[#0B0F19] text-xs uppercase tracking-wider text-slate-500 border-b border-slate-800">
+                            <th class="p-4 font-semibold">Ativo (Ticker)</th>
+                            <th class="p-4 font-semibold text-right">Preço Atual</th>
+                            <th class="p-4 font-semibold text-right">Variação (R$)</th>
+                            <th class="p-4 font-semibold text-right">Variação (%)</th>
+                            <th class="p-4 font-semibold text-center">Operar</th>
+                            <th class="p-4 font-semibold text-center w-16">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-acoes" class="text-sm divide-y divide-slate-800/50">
+                        <!-- O conteúdo será preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Rodapé da Tabela -->
+            <div
+                class="p-3 bg-[#0B0F19] border-t border-slate-800 text-xs text-slate-500 flex justify-between items-center">
+                <span>Atualização sincronizada com o relógio do simulador.</span>
+                <span class="flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5"></i> Variações em
+                    relação ao fechamento diário.</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- COMPONENTES DE AVISO E CONFIRMAÇÃO         -->
+    <!-- ========================================== -->
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[70] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Custom Modal: Aviso Simples (Alert) -->
+    <div id="modal-alert"
+        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div
+            class="bg-[#0F172A] border border-slate-700 rounded-2xl w-full max-w-sm shadow-2xl p-6 text-center animate-[fadeIn_0.15s_ease-out]">
+            <div
+                class="w-14 h-14 rounded-full bg-prime-500/10 border border-prime-500/20 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="info" class="w-7 h-7 text-prime-500"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2 tracking-tight" id="alert-title">Aviso</h3>
+            <p class="text-sm text-slate-400 mb-6 leading-relaxed" id="alert-message">Mensagem do sistema</p>
+            <button onclick="fecharModal('modal-alert')"
+                class="w-full py-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors border border-slate-700 shadow-lg">Entendi</button>
+        </div>
+    </div>
+
+    <!-- Custom Modal: Confirmação Perigosa/Ação (Confirm) -->
+    <div id="modal-confirm"
+        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div
+            class="bg-[#0F172A] border border-slate-700 rounded-2xl w-full max-w-sm shadow-2xl p-6 text-center animate-[fadeIn_0.15s_ease-out]">
+            <div id="confirm-icon-bg"
+                class="w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
+                <span id="confirm-icon"><i data-lucide="alert-triangle" class="w-7 h-7 text-red-500"></i></span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2 tracking-tight" id="confirm-title">Tem certeza?</h3>
+            <p class="text-sm text-slate-400 mb-8 leading-relaxed" id="confirm-message">Mensagem de confirmação.</p>
+            <div class="flex gap-3">
+                <button onclick="fecharModal('modal-confirm')"
+                    class="flex-1 py-3 rounded-lg border border-slate-700 text-slate-300 font-medium hover:bg-slate-800 transition-colors">Cancelar</button>
+                <button id="btn-confirm-action" onclick="executarConfirm()"
+                    class="flex-1 py-3 rounded-lg bg-red-600 text-white font-bold hover:bg-red-500 transition-colors shadow-lg shadow-red-500/20">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- MODAIS DO SISTEMA FINANCEIRO               -->
+    <!-- ========================================== -->
+
+    <!-- Modal: Adicionar Ação -->
+    <div id="modal-adicionar-acao"
+        class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div
+            class="bg-[#0F172A] border border-slate-700 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            <div class="p-5 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i data-lucide="search" class="w-5 h-5 text-prime-500"></i> Buscar Novo Ativo
+                </h3>
+                <button onclick="fecharModal('modal-adicionar-acao')"
+                    class="text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-sm text-slate-400 mb-4">Selecione uma ação do mercado para adicionar ao seu painel de
+                    acompanhamento.</p>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1.5">Código da Ação</label>
+                    <div class="relative input-fintech rounded-lg flex items-center">
+                        <input type="text" id="add-ticker-input"
+                            class="w-full bg-transparent border-none text-white px-4 py-3 focus:outline-none placeholder-slate-600 text-sm uppercase"
+                            placeholder="EX: PETR4" maxlength="6">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex gap-3">
+                    <button onclick="fecharModal('modal-adicionar-acao')"
+                        class="flex-1 py-2.5 rounded-lg border border-slate-700 text-slate-300 font-medium hover:bg-slate-800 transition-colors">Cancelar</button>
+                    <button onclick="salvarNovaAcao()"
+                        class="flex-1 py-2.5 rounded-lg bg-prime-500 text-slate-900 font-bold hover:bg-prime-400 transition-colors shadow-lg shadow-prime-500/20">Adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Comprar / Vender Ação (Ordem) -->
+    <div id="modal-ordem"
+        class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div
+            class="bg-[#0F172A] border border-slate-700 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+
+            <!-- Header Dinâmico -->
+            <div id="modal-ordem-header"
+                class="p-5 border-b border-slate-800 flex justify-between items-center bg-blue-500/10">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2" id="modal-ordem-titulo">
+                        Comprar PETR4
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">Preço Atual: <strong class="text-white"
+                            id="modal-ordem-preco-atual">R$ 0,00</strong></p>
+                </div>
+                <button onclick="fecharModal('modal-ordem')" class="text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-6">
+                <!-- Tipo de Ordem (Escondido, definido no JS via botão) -->
+                <input type="hidden" id="ordem-ticker" value="">
+                <input type="hidden" id="ordem-tipo-operacao" value="compra"> <!-- compra ou venda -->
+
+                <div class="space-y-4">
+                    <!-- Tipo de Execução -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Tipo de Execução</label>
+                        <select id="ordem-tipo-execucao" onchange="togglePrecoReferencia()"
+                            class="w-full input-fintech text-white px-4 py-3 rounded-lg focus:outline-none text-sm appearance-none cursor-pointer">
+                            <option value="mercado">A Mercado (Preço Atual)</option>
+                            <option value="condicional">Condicional (Agendada)</option>
+                        </select>
+                    </div>
+
+                    <!-- Quantidade -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Quantidade</label>
+                        <input type="number" id="ordem-quantidade" min="1" step="1"
+                            class="w-full input-fintech text-white px-4 py-3 rounded-lg focus:outline-none text-sm"
+                            placeholder="Qtd. de ações" value="100">
+                    </div>
+
+                    <!-- Preço de Referência (Apenas para Condicional) -->
+                    <div id="box-preco-referencia" class="hidden">
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Preço Desejado (Gatilho)</label>
+                        <div class="relative input-fintech rounded-lg flex items-center">
+                            <span class="pl-4 text-slate-500 text-sm">R$</span>
+                            <input type="number" id="ordem-preco-referencia" min="0.01" step="0.01"
+                                class="w-full bg-transparent border-none text-white px-2 py-3 focus:outline-none text-sm"
+                                placeholder="0.00">
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-1" id="ordem-dica">A ordem será executada
+                            automaticamente quando o preço atingir este valor.</p>
+                    </div>
+
+                    <!-- Resumo Financeiro (Apenas para "A Mercado") -->
+                    <div id="box-resumo-ordem" class="bg-[#151E2E] border border-slate-800 rounded-lg p-4 mt-2">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Total Estimado:</span>
+                            <span class="text-white font-bold" id="ordem-total-estimado">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button id="btn-enviar-ordem" onclick="enviarOrdem()"
+                        class="w-full py-3 rounded-lg font-bold transition-colors shadow-lg flex items-center justify-center gap-2">
+                        Confirmar Ordem
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SCRIPTS E LÓGICA DE INTEGRAÇÃO             -->
+    <!-- ========================================== -->
+    <script>
+        // Inicializa ícones
+        lucide.createIcons();
+
+        // ==========================================
+        // UI & HELPERS GERAIS (MENUS, TOASTS E MODAIS)
+        // ==========================================
+        function toggleDropdown(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        // Fechar dropdowns ao clicar fora
+        document.addEventListener('click', function (event) {
+            const userBtn = document.getElementById('user-menu-btn');
+            const userMenu = document.getElementById('user-dropdown');
+            if (userBtn && userMenu && !userBtn.contains(event.target) && !userMenu.contains(event.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
+
+        // Controles de Modais Padrão
+        function abrirModal(id) { document.getElementById(id).classList.add('modal-active'); }
+        function fecharModal(id) { document.getElementById(id).classList.remove('modal-active'); }
+
+        // Custom Alert (Substitui o window.alert)
+        function mostrarAviso(mensagem, titulo = 'Aviso') {
+            document.getElementById('alert-title').innerText = titulo;
+            document.getElementById('alert-message').innerText = mensagem;
+            abrirModal('modal-alert');
+        }
+
+        // Custom Confirm (Substitui o window.confirm)
+        let funcaoCallbackConfirm = null;
+        function mostrarConfirmacao(mensagem, titulo, tipoAcao, callback) {
+            document.getElementById('confirm-title').innerText = titulo;
+            document.getElementById('confirm-message').innerText = mensagem;
+
+            const btn = document.getElementById('btn-confirm-action');
+            const iconBg = document.getElementById('confirm-icon-bg');
+            const icon = document.getElementById('confirm-icon');
+
+            if (tipoAcao === 'perigo') {
+                btn.className = "flex-1 py-3 rounded-lg bg-red-600 text-white font-bold hover:bg-red-500 transition-colors shadow-lg shadow-red-500/20";
+                iconBg.className = "w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4";
+                icon.innerHTML = '<i data-lucide="alert-triangle" class="w-7 h-7 text-red-500"></i>';
+            } else {
+                btn.className = "flex-1 py-3 rounded-lg bg-prime-500 text-slate-900 font-bold hover:bg-prime-400 transition-colors shadow-lg shadow-prime-500/20";
+                iconBg.className = "w-14 h-14 rounded-full bg-prime-500/10 border border-prime-500/20 flex items-center justify-center mx-auto mb-4";
+                icon.innerHTML = '<i data-lucide="help-circle" class="w-7 h-7 text-prime-500"></i>';
+            }
+
+            funcaoCallbackConfirm = callback;
+            lucide.createIcons();
+            abrirModal('modal-confirm');
+        }
+
+        function executarConfirm() {
+            fecharModal('modal-confirm');
+            if (funcaoCallbackConfirm) funcaoCallbackConfirm();
+        }
+
+        // Toast Notifications Flutuantes
+        function mostrarToast(mensagem, tipo = 'sucesso') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let icon = '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>';
+            let bgClass = 'border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.15)]';
+
+            if (tipo === 'erro') {
+                icon = '<i data-lucide="x-circle" class="w-5 h-5 text-red-500"></i>';
+                bgClass = 'border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)]';
+            }
+
+            toast.className = `flex items-center gap-3 bg-[#0F172A] border ${bgClass} p-4 rounded-xl shadow-xl pointer-events-auto animate-slide-in`;
+            toast.innerHTML = `
+                ${icon}
+                <p class="text-sm font-medium text-white pr-4">${mensagem}</p>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-slate-500 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            // Remove automaticamente após 4 segundos
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Ação Sair da Conta
+        function confirmarSaida() {
+            // Fecha dropdowns se estiverem abertos
+            document.getElementById('user-dropdown')?.classList.add('hidden');
+            document.getElementById('user-mobile-dropdown')?.classList.add('hidden');
+
+            mostrarConfirmacao(
+                "Tem certeza que deseja sair do sistema? Suas ordens condicionais continuarão rodando em segundo plano.",
+                "Sair da Conta",
+                "perigo",
+                () => {
+                    window.location.href = "../pagina-login.html";
+                }
+            );
+        }
+
+        // ==========================================
+        // ESTADO GLOBAL DA INTERFACE
+        // ==========================================
+        let state = {
+            minutoAtual: 0,
+            acoesMercado: [],
+            saldoConta: 15000.00 // Mock
+        };
+
+        // ==========================================
+        // 1. CARREGAMENTO INICIAL (MOCK)
+        // ==========================================
+        async function carregarMercado() {
+            state.acoesMercado = [
+                { ticker: 'PETR4', preco: '31.04', variacaoNominal: '-0.20', variacaoPercentual: '-0.64' },
+                { ticker: 'VALE5', preco: '32.85', variacaoNominal: '+2.00', variacaoPercentual: '+6.49' },
+                { ticker: 'COGN3', preco: '2.97', variacaoNominal: '+0.08', variacaoPercentual: '+2.77' },
+                { ticker: 'B3SA3', preco: '13.95', variacaoNominal: '-0.15', variacaoPercentual: '-1.06' },
+                { ticker: 'ITUB4', preco: '34.50', variacaoNominal: '+0.45', variacaoPercentual: '+1.32' }
+            ];
+
+            atualizarRelogio();
+            renderizarTabela();
+        }
+
+        // ==========================================
+        // 2. CONTROLE DO TEMPO E ATUALIZAÇÃO
+        // ==========================================
+        async function avancarTempo(minutosAdicionais) {
+            state.minutoAtual += minutosAdicionais;
+            if (state.minutoAtual > 59) state.minutoAtual = 59;
+            atualizarRelogio();
+
+            // Simula flutuação de preços para ver o efeito de piscar
+            state.acoesMercado = state.acoesMercado.map(acao => {
+                const varAleatoria = (Math.random() * 2) - 1;
+                const novoPreco = (parseFloat(acao.preco) + varAleatoria).toFixed(2);
+                const novaVariacaoNom = (parseFloat(acao.variacaoNominal) + varAleatoria).toFixed(2);
+
+                return {
+                    ...acao,
+                    precoAntigo: acao.preco,
+                    preco: novoPreco,
+                    variacaoNominal: (novaVariacaoNom > 0 ? '+' : '') + novaVariacaoNom,
+                    variacaoPercentual: acao.variacaoPercentual
+                };
+            });
+
+            renderizarTabela();
+        }
+
+        function atualizarRelogio() {
+            const dataBase = new Date();
+            dataBase.setHours(14, state.minutoAtual, 0, 0);
+
+            const hr = String(dataBase.getHours()).padStart(2, '0');
+            const min = String(dataBase.getMinutes()).padStart(2, '0');
+
+            document.getElementById('relogio-display').innerText = `${hr}:${min}`;
+        }
+
+        // ==========================================
+        // 3. RENDERIZAÇÃO DA TABELA (REQUISITO #2)
+        // ==========================================
+        function renderizarTabela() {
+            const tbody = document.getElementById('tabela-acoes');
+            tbody.innerHTML = '';
+
+            state.acoesMercado.forEach(acao => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/30 transition-colors group';
+
+                const isPositivo = acao.variacaoNominal.startsWith('+');
+                const colorClass = isPositivo ? 'text-emerald-400' : 'text-red-400';
+                const iconClass = isPositivo ? '<i data-lucide="trending-up" class="w-3.5 h-3.5 mr-1 inline"></i>' : '<i data-lucide="trending-down" class="w-3.5 h-3.5 mr-1 inline"></i>';
+
+                let flashClass = '';
+                if (acao.precoAntigo) {
+                    if (parseFloat(acao.preco) > parseFloat(acao.precoAntigo)) flashClass = 'flash-up';
+                    else if (parseFloat(acao.preco) < parseFloat(acao.precoAntigo)) flashClass = 'flash-down';
+                }
+
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-white flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full ${isPositivo ? 'bg-emerald-500' : 'bg-red-500'}"></div>
+                        ${acao.ticker}
+                    </td>
+                    <td class="p-4 text-right font-medium text-white ${flashClass}">R$ ${acao.preco}</td>
+                    <td class="p-4 text-right font-medium ${colorClass} ${flashClass}">${iconClass} R$ ${acao.variacaoNominal.replace('+', '')}</td>
+                    <td class="p-4 text-right font-bold ${colorClass} ${flashClass}">${acao.variacaoPercentual}%</td>
+                    
+                    <td class="p-4">
+                        <div class="flex justify-center gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                            <button onclick="abrirModalOrdem('compra', '${acao.ticker}', '${acao.preco}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded shadow transition-colors">
+                                COMPRAR
+                            </button>
+                            <button onclick="abrirModalOrdem('venda', '${acao.ticker}', '${acao.preco}')" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded shadow transition-colors">
+                                VENDER
+                            </button>
+                        </div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <button onclick="tentarRemoverAcao('${acao.ticker}')" class="text-slate-500 hover:text-red-400 transition-colors" title="Remover da visualização">
+                            <i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 4. AÇÕES DA TABELA (ADD/REMOVE)
+        // ==========================================
+        function tentarRemoverAcao(ticker) {
+            mostrarConfirmacao(
+                `Você deixará de acompanhar a ação ${ticker} no painel principal.`,
+                "Remover Ativo",
+                "perigo",
+                () => {
+                    // Lógica de exclusão Mockada
+                    state.acoesMercado = state.acoesMercado.filter(a => a.ticker !== ticker);
+                    renderizarTabela();
+                    mostrarToast(`${ticker} foi removido com sucesso.`);
+                }
+            );
+        }
+
+        async function salvarNovaAcao() {
+            const input = document.getElementById('add-ticker-input');
+            const ticker = input.value.toUpperCase();
+
+            if (!ticker || ticker.length < 4) {
+                mostrarAviso("Digite um código de ação válido. Exemplo: PETR4", "Código Inválido");
+                return;
+            }
+
+            state.acoesMercado.push({ ticker: ticker, preco: '0.00', variacaoNominal: '+0.00', variacaoPercentual: '+0.00' });
+            input.value = '';
+            fecharModal('modal-adicionar-acao');
+            renderizarTabela();
+            mostrarToast(`Ação ${ticker} adicionada ao painel.`);
+        }
+
+        // ==========================================
+        // 5. LÓGICA DE ORDENS (COMPRA / VENDA)
+        // ==========================================
+        function abrirModalOrdem(tipo, ticker, precoAtual) {
+            document.getElementById('ordem-ticker').value = ticker;
+            document.getElementById('ordem-tipo-operacao').value = tipo;
+            document.getElementById('modal-ordem-preco-atual').innerText = `R$ ${precoAtual}`;
+
+            const header = document.getElementById('modal-ordem-header');
+            const btn = document.getElementById('btn-enviar-ordem');
+            const titulo = document.getElementById('modal-ordem-titulo');
+
+            if (tipo === 'compra') {
+                header.className = 'p-5 border-b border-slate-800 flex justify-between items-center bg-blue-900/20 border-l-4 border-l-blue-500';
+                titulo.innerHTML = `<i data-lucide="shopping-cart" class="w-5 h-5 text-blue-400"></i> Comprar ${ticker}`;
+                btn.className = 'w-full py-3 rounded-lg font-bold transition-colors shadow-lg flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white';
+                btn.innerHTML = 'Confirmar Compra <i data-lucide="check" class="w-4 h-4"></i>';
+            } else {
+                header.className = 'p-5 border-b border-slate-800 flex justify-between items-center bg-purple-900/20 border-l-4 border-l-purple-500';
+                titulo.innerHTML = `<i data-lucide="tag" class="w-5 h-5 text-purple-400"></i> Vender ${ticker}`;
+                btn.className = 'w-full py-3 rounded-lg font-bold transition-colors shadow-lg flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-500 text-white';
+                btn.innerHTML = 'Confirmar Venda <i data-lucide="check" class="w-4 h-4"></i>';
+            }
+
+            document.getElementById('ordem-tipo-execucao').value = 'mercado';
+            document.getElementById('ordem-quantidade').value = 100;
+            document.getElementById('ordem-preco-referencia').value = '';
+            togglePrecoReferencia();
+            calcularEstimativa();
+
+            lucide.createIcons();
+            abrirModal('modal-ordem');
+        }
+
+        function togglePrecoReferencia() {
+            const tipo = document.getElementById('ordem-tipo-execucao').value;
+            const boxRef = document.getElementById('box-preco-referencia');
+            const boxResumo = document.getElementById('box-resumo-ordem');
+
+            if (tipo === 'condicional') {
+                boxRef.classList.remove('hidden');
+                boxResumo.classList.add('hidden');
+            } else {
+                boxRef.classList.add('hidden');
+                boxResumo.classList.remove('hidden');
+                calcularEstimativa();
+            }
+        }
+
+        function calcularEstimativa() {
+            const qtd = parseInt(document.getElementById('ordem-quantidade').value) || 0;
+            const precoStr = document.getElementById('modal-ordem-preco-atual').innerText.replace('R$ ', '');
+            const preco = parseFloat(precoStr);
+
+            const total = qtd * preco;
+            document.getElementById('ordem-total-estimado').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        }
+
+        document.getElementById('ordem-quantidade').addEventListener('input', calcularEstimativa);
+
+        async function enviarOrdem() {
+            const payload = {
+                ticker: document.getElementById('ordem-ticker').value,
+                tipoOrdem: document.getElementById('ordem-tipo-operacao').value,
+                tipoExecucao: document.getElementById('ordem-tipo-execucao').value,
+                quantidade: parseInt(document.getElementById('ordem-quantidade').value),
+                precoReferencia: parseFloat(document.getElementById('ordem-preco-referencia').value) || null
+            };
+
+            if (payload.quantidade <= 0 || isNaN(payload.quantidade)) {
+                mostrarAviso("Por favor, insira uma quantidade válida de ações maior que zero.", "Quantidade Inválida");
+                return;
+            }
+            if (payload.tipoExecucao === 'condicional' && (!payload.precoReferencia || payload.precoReferencia <= 0)) {
+                mostrarAviso("Para uma ordem condicional, você deve definir um Preço Desejado válido.", "Gatilho Necessário");
+                return;
+            }
+
+            // Mock Fechamento e Sucesso
+            fecharModal('modal-ordem');
+            mostrarToast(`Sua ordem de ${payload.tipoOrdem} para ${payload.ticker} foi registrada.`);
+        }
+
+        // Start
+        carregarMercado();
+    </script>
+</body>
+
+</html>

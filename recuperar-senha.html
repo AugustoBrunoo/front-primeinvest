@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeInvest | Recuperar Senha</title>
+
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        prime: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        slate: {
+                            850: '#151e2e',
+                            900: '#0F172A',
+                            950: '#0B0F19',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .input-fintech {
+            background: #0B0F19;
+            border: 1px solid #1F2937;
+            transition: all 0.2s ease;
+        }
+
+        .input-fintech:focus-within {
+            border-color: #EAB308;
+            box-shadow: 0 0 0 1px #EAB308;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-950 text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col relative overflow-hidden">
+
+    <!-- Elementos Decorativos de Fundo -->
+    <div
+        class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-prime-500/5 blur-[120px] rounded-full pointer-events-none">
+    </div>
+    <div
+        class="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none">
+    </div>
+
+    <!-- Navbar Minimalista -->
+    <nav class="absolute w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <!-- Logo PrimeInvest -->
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer group">
+                    <div
+                        class="w-9 h-9 rounded-lg bg-prime-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-prime-500/20 group-hover:scale-105 transition-transform">
+                        P
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-white">Prime<span
+                            class="text-prime-500 font-medium">Invest</span></span>
+                </a>
+
+                <!-- Voltar para Login -->
+                <a href="./pagina-login.html"
+                    class="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    Voltar para Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center px-4 relative z-10 py-24">
+
+        <div class="w-full max-w-md">
+
+            <!-- Container do Formulário (Estado 1) -->
+            <div id="form-container" class="transition-all duration-500">
+                <div class="text-center mb-8">
+                    <div
+                        class="w-16 h-16 bg-slate-800/50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-slate-700/50">
+                        <i data-lucide="key-round" class="w-8 h-8 text-prime-500"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">Recuperar Senha</h1>
+                    <p class="text-slate-400 text-sm px-4">
+                        Digite o e-mail associado à sua conta. Enviaremos as instruções para você criar uma nova senha.
+                    </p>
+                </div>
+
+                <div class="bg-[#0F172A]/90 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8">
+
+                    <!-- Box de Erro (Oculto por padrão) -->
+                    <div id="error-box"
+                        class="hidden mb-5 bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-start gap-3">
+                        <i data-lucide="alert-circle" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>
+                        <p id="error-message" class="text-sm text-red-200">Mensagem de erro aqui.</p>
+                    </div>
+
+                    <form id="forgot-password-form" class="space-y-5">
+                        <!-- Campo E-mail -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-300 mb-1.5">Endereço de
+                                E-mail</label>
+                            <div class="relative input-fintech rounded-lg flex items-center">
+                                <div class="pl-4 text-slate-500">
+                                    <i data-lucide="mail" class="w-5 h-5"></i>
+                                </div>
+                                <input type="email" id="email"
+                                    class="w-full bg-transparent border-none text-white px-3 py-3.5 focus:outline-none placeholder-slate-600 text-sm"
+                                    placeholder="exemplo@email.com" required>
+                            </div>
+                        </div>
+
+                        <!-- Botão Submit -->
+                        <button type="submit" id="submit-btn"
+                            class="w-full bg-prime-500 hover:bg-prime-400 text-slate-900 font-semibold py-3.5 px-4 rounded-lg transition-all duration-200 shadow-lg shadow-prime-500/20 flex items-center justify-center gap-2 mt-2">
+                            <span>Enviar Instruções</span>
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Container de Sucesso (Estado 2 - Oculto por padrão) -->
+            <div id="success-container" class="hidden text-center transition-all duration-500 opacity-0 scale-95">
+                <div
+                    class="bg-[#0F172A]/90 backdrop-blur-md border border-prime-500/30 rounded-2xl shadow-[0_0_40px_-10px_rgba(234,179,8,0.2)] p-8 sm:p-10">
+                    <div
+                        class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/20">
+                        <i data-lucide="mail-check" class="w-10 h-10 text-emerald-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-3">E-mail Enviado!</h2>
+                    <p class="text-slate-400 text-sm mb-8 leading-relaxed">
+                        Acabamos de enviar um link de recuperação para <br>
+                        <strong id="sent-email-display" class="text-white font-medium"></strong><br>
+                        Verifique sua caixa de entrada e a pasta de spam.
+                    </p>
+
+                    <!-- Para fins de teste (Já que seu backend simula e retorna a URL) -->
+                    <div id="dev-mock-url"
+                        class="hidden mb-8 p-4 bg-slate-900 rounded-lg border border-slate-700 text-left">
+                        <p class="text-xs text-prime-500 font-bold mb-2 uppercase tracking-wider">Apenas para Teste Dev:
+                        </p>
+                        <a id="mock-link" href="#"
+                            class="text-sm text-blue-400 hover:text-blue-300 break-all underline">link gerado</a>
+                    </div>
+
+                    <a href="login.html"
+                        class="inline-block w-full bg-transparent border border-slate-700 hover:bg-slate-800 text-white font-medium py-3.5 px-4 rounded-lg transition-colors">
+                        Voltar para o Login
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="py-6 text-center text-xs text-slate-600 relative z-10">
+        <p>&copy; 2026 PrimeInvest. Ambiente seguro e criptografado.</p>
+    </footer>
+
+    <!-- Scripts de Lógica e Integração -->
+    <script>
+        lucide.createIcons();
+
+        const form = document.getElementById('forgot-password-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const emailInput = document.getElementById('email');
+        const errorBox = document.getElementById('error-box');
+        const errorMessage = document.getElementById('error-message');
+
+        const formContainer = document.getElementById('form-container');
+        const successContainer = document.getElementById('success-container');
+        const sentEmailDisplay = document.getElementById('sent-email-display');
+
+        // Regex copiado do seu authController.js
+        function verificaEmailValido(email) {
+            if (!email) return false;
+            return /^[A-Za-z0-9._%-]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,4}$/.test(email);
+        }
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorBox.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorBox.classList.add('hidden');
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const email = emailInput.value.trim();
+
+            // Validação Front-end espelhando o Back-end
+            if (!verificaEmailValido(email)) {
+                showError("O e-mail digitado não está em um formato adequado.");
+                return;
+            }
+
+            // Estado de Carregamento
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Processando...</span>`;
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            submitBtn.disabled = true;
+            lucide.createIcons();
+
+            // ==========================================
+            // INTEGRAÇÃO FUTURA COM SEU NODE.JS
+            // ==========================================
+            /*
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/esqueci-senha', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Erro ao processar solicitação.");
+                }
+
+                // SUCESSO: Mostrar tela de confirmação
+                showSuccessState(email, data.urlAcessoFrontend);
+
+            } catch (error) {
+                showError(error.message);
+                resetButton(originalContent);
+            }
+            */
+
+            // ==========================================
+            // MOCK PARA VISUALIZAÇÃO ATUAL (Remova quando integrar o fetch acima)
+            // ==========================================
+            setTimeout(() => {
+                // Simulando resposta positiva do seu backend
+                const mockResponse = {
+                    message: "Simulação: Token de recuperação gerado com sucesso!",
+                    urlAcessoFrontend: `http://localhost:3000/login/reset?token=abc123mock&email=${email}`
+                };
+
+                showSuccessState(email, mockResponse.urlAcessoFrontend);
+            }, 1500);
+        });
+
+        function resetButton(originalContent) {
+            submitBtn.innerHTML = originalContent;
+            submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+            submitBtn.disabled = false;
+            lucide.createIcons();
+        }
+
+        function showSuccessState(email, devUrl = null) {
+            // Esconde o form com fade out
+            formContainer.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                formContainer.classList.add('hidden');
+
+                // Configura dados de sucesso
+                sentEmailDisplay.textContent = email;
+
+                // Mostra URL de mock para facilitar testes locais (Conforme seu authController)
+                if (devUrl) {
+                    document.getElementById('dev-mock-url').classList.remove('hidden');
+                    document.getElementById('mock-link').href = devUrl;
+                    document.getElementById('mock-link').textContent = devUrl;
+                }
+
+                // Mostra tela de sucesso
+                successContainer.classList.remove('hidden');
+
+                // Pequeno delay para a transição de fade in funcionar
+                setTimeout(() => {
+                    successContainer.classList.remove('opacity-0', 'scale-95');
+                    successContainer.classList.add('opacity-100', 'scale-100');
+                }, 50);
+
+            }, 500); // tempo da transição do tailwind
+        }
+    </script>
+</body>
+
+</html>

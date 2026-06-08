@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeInvest | Redefinir Senha</title>
+
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        prime: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        slate: {
+                            850: '#151e2e',
+                            900: '#0F172A',
+                            950: '#0B0F19',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .input-fintech {
+            background: #0B0F19;
+            border: 1px solid #1F2937;
+            transition: all 0.2s ease;
+        }
+
+        .input-fintech:focus-within {
+            border-color: #EAB308;
+            box-shadow: 0 0 0 1px #EAB308;
+        }
+
+        /* Validação visual de senha forte */
+        .pwd-valid {
+            color: #10B981;
+        }
+
+        /* emerald-500 */
+        .pwd-invalid {
+            color: #64748B;
+        }
+
+        /* slate-500 */
+    </style>
+</head>
+
+<body
+    class="bg-slate-950 text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col relative overflow-hidden">
+
+    <!-- Elementos Decorativos de Fundo -->
+    <div
+        class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-prime-500/5 blur-[120px] rounded-full pointer-events-none">
+    </div>
+    <div
+        class="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none">
+    </div>
+
+    <!-- Navbar Minimalista -->
+    <nav class="absolute w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <!-- Logo PrimeInvest -->
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer group">
+                    <div
+                        class="w-9 h-9 rounded-lg bg-prime-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-prime-500/20 group-hover:scale-105 transition-transform">
+                        P
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-white">Prime<span
+                            class="text-prime-500 font-medium">Invest</span></span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center px-4 relative z-10 py-24">
+
+        <div class="w-full max-w-md">
+
+            <!-- Estado de Erro na URL (Oculto por padrão) -->
+            <div id="invalid-url-container"
+                class="hidden text-center bg-[#0F172A]/90 backdrop-blur-md border border-red-500/30 rounded-2xl p-8 shadow-2xl">
+                <div
+                    class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                    <i data-lucide="shield-alert" class="w-8 h-8 text-red-500"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Link Inválido</h2>
+                <p class="text-slate-400 text-sm mb-6">Este link de recuperação está incompleto, incorreto ou já
+                    expirou.</p>
+                <a href="esqueci-senha.html"
+                    class="inline-block w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                    Solicitar novo link
+                </a>
+            </div>
+
+            <!-- Formulário de Redefinição (Estado 1) -->
+            <div id="reset-container" class="transition-all duration-500">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">Criar Nova Senha</h1>
+                    <p class="text-slate-400 text-sm px-4">
+                        Acesso autorizado para: <br>
+                        <strong id="display-email" class="text-prime-400">carregando...</strong>
+                    </p>
+                </div>
+
+                <div class="bg-[#0F172A]/90 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8">
+
+                    <!-- Box de Erro Backend -->
+                    <div id="error-box"
+                        class="hidden mb-5 bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-start gap-3">
+                        <i data-lucide="alert-circle" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>
+                        <p id="error-message" class="text-sm text-red-200">Mensagem de erro aqui.</p>
+                    </div>
+
+                    <form id="reset-password-form" class="space-y-5">
+
+                        <!-- Nova Senha -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-slate-300 mb-1.5">Nova
+                                Senha</label>
+                            <div class="relative input-fintech rounded-lg flex items-center">
+                                <div class="pl-4 text-slate-500">
+                                    <i data-lucide="lock" class="w-5 h-5"></i>
+                                </div>
+                                <input type="password" id="password"
+                                    class="w-full bg-transparent border-none text-white px-3 py-3.5 focus:outline-none placeholder-slate-600 text-sm"
+                                    placeholder="••••••••" required>
+
+                                <button type="button"
+                                    class="toggle-password pr-4 text-slate-500 hover:text-slate-300 focus:outline-none"
+                                    data-target="password">
+                                    <i data-lucide="eye" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+                            <!-- Barra de Força da Senha -->
+                            <div class="mt-3">
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <span class="text-xs text-slate-400 font-medium">Nível de segurança:</span>
+                                    <span id="strength-text" class="text-xs font-bold text-slate-500"></span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                    <div id="strength-bar" class="h-full w-0 transition-all duration-500 ease-out">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Repetir Nova Senha -->
+                        <div>
+                            <label for="password-confirm"
+                                class="block text-sm font-medium text-slate-300 mb-1.5">Confirmar Nova Senha</label>
+                            <div class="relative input-fintech rounded-lg flex items-center">
+                                <div class="pl-4 text-slate-500">
+                                    <i data-lucide="lock-keyhole" class="w-5 h-5"></i>
+                                </div>
+                                <input type="password" id="password-confirm"
+                                    class="w-full bg-transparent border-none text-white px-3 py-3.5 focus:outline-none placeholder-slate-600 text-sm"
+                                    placeholder="••••••••" required>
+
+                                <button type="button"
+                                    class="toggle-password pr-4 text-slate-500 hover:text-slate-300 focus:outline-none"
+                                    data-target="password-confirm">
+                                    <i data-lucide="eye" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Regras da Senha (Visual) -->
+                        <div class="bg-[#0B0F19] rounded-lg p-4 border border-slate-800">
+                            <p class="text-xs text-slate-400 mb-2 font-medium">A senha deve conter:</p>
+                            <ul class="space-y-1.5 text-xs text-slate-500" id="password-rules">
+                                <li id="rule-length" class="flex items-center gap-2"><i data-lucide="x"
+                                        class="w-3.5 h-3.5"></i> Mínimo de 8 caracteres</li>
+                                <li id="rule-letter" class="flex items-center gap-2"><i data-lucide="x"
+                                        class="w-3.5 h-3.5"></i> Pelo menos uma letra</li>
+                                <li id="rule-number" class="flex items-center gap-2"><i data-lucide="x"
+                                        class="w-3.5 h-3.5"></i> Pelo menos um número</li>
+                                <li id="rule-match" class="flex items-center gap-2"><i data-lucide="x"
+                                        class="w-3.5 h-3.5"></i> As senhas devem ser iguais</li>
+                            </ul>
+                        </div>
+
+                        <!-- Botão Submit -->
+                        <button type="submit" id="submit-btn" disabled
+                            class="w-full bg-slate-700 text-slate-400 cursor-not-allowed font-semibold py-3.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 mt-4">
+                            <span>Redefinir Senha</span>
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Container de Sucesso (Estado 2) -->
+            <div id="success-container" class="hidden text-center transition-all duration-500 opacity-0 scale-95">
+                <div
+                    class="bg-[#0F172A]/90 backdrop-blur-md border border-emerald-500/30 rounded-2xl shadow-[0_0_40px_-10px_rgba(16,185,129,0.2)] p-8 sm:p-10">
+                    <div
+                        class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/20">
+                        <i data-lucide="shield-check" class="w-10 h-10 text-emerald-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-3">Senha Atualizada!</h2>
+                    <p class="text-slate-400 text-sm mb-8 leading-relaxed">
+                        Sua senha foi redefinida com sucesso. Você já pode acessar a plataforma com suas novas
+                        credenciais.
+                    </p>
+
+                    <a href="login.html"
+                        class="inline-block w-full bg-prime-500 hover:bg-prime-400 text-slate-900 font-semibold py-3.5 px-4 rounded-lg transition-colors shadow-lg shadow-prime-500/20">
+                        Ir para o Login
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        // 1. Extração de Parâmetros da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToken = urlParams.get('token');
+        const urlEmail = urlParams.get('email');
+
+        const invalidUrlContainer = document.getElementById('invalid-url-container');
+        const resetContainer = document.getElementById('reset-container');
+        const displayEmail = document.getElementById('display-email');
+
+        // --- MOCK PARA TESTE DE DESIGN ---
+        // Comentamos a trava para você visualizar o design da página de nova senha
+        /*
+        if (!urlToken || !urlEmail) {
+            resetContainer.classList.add('hidden');
+            invalidUrlContainer.classList.remove('hidden');
+        } else {
+            // Mostra o email na tela de forma limpa
+            displayEmail.textContent = urlEmail;
+        }
+        */
+
+        // Forçando a exibição de um email simulado caso abra o arquivo direto:
+        displayEmail.textContent = urlEmail || "usuario.teste@primeinvest.com";
+        // ----------------------------------
+
+        // 2. Lógica de UI do Formulário
+        const form = document.getElementById('reset-password-form');
+        const pwdInput = document.getElementById('password');
+        const pwdConfirmInput = document.getElementById('password-confirm');
+        const submitBtn = document.getElementById('submit-btn');
+
+        const errorBox = document.getElementById('error-box');
+        const errorMessage = document.getElementById('error-message');
+
+        // Regex do Backend do Professor
+        const regexLetra = /.*[a-zA-Z].*/;
+        const regexNumero = /.*[0-9].*/;
+
+        // Elementos da Força da Senha
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthText = document.getElementById('strength-text');
+
+        // Toggle Mostrar Senha (Funciona para ambos os campos)
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+
+                const iconName = type === 'password' ? 'eye' : 'eye-off';
+                this.innerHTML = `<i data-lucide="${iconName}" class="w-5 h-5"></i>`;
+                lucide.createIcons();
+            });
+        });
+
+        // 3. Validação em Tempo Real (Espelho do Backend)
+        function checkPasswordRules() {
+            const pwd = pwdInput.value;
+            const confirm = pwdConfirmInput.value;
+
+            let isLengthValid = pwd.length >= 8;
+            let isLetterValid = regexLetra.test(pwd);
+            let isNumberValid = regexNumero.test(pwd);
+            let isMatchValid = pwd === confirm && pwd !== '';
+
+            // Atualiza o medidor de força da senha
+            updateStrengthMeter(pwd);
+
+            // Atualiza UI das regrinhas visuais
+            updateRuleUI('rule-length', isLengthValid);
+            updateRuleUI('rule-letter', isLetterValid);
+            updateRuleUI('rule-number', isNumberValid);
+            updateRuleUI('rule-match', isMatchValid);
+
+            // Habilita/Desabilita o botão
+            if (isLengthValid && isLetterValid && isNumberValid && isMatchValid) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+                submitBtn.classList.add('bg-prime-500', 'hover:bg-prime-400', 'text-slate-900', 'shadow-lg', 'shadow-prime-500/20');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+                submitBtn.classList.remove('bg-prime-500', 'hover:bg-prime-400', 'text-slate-900', 'shadow-lg', 'shadow-prime-500/20');
+            }
+        }
+
+        function updateRuleUI(elementId, isValid) {
+            const el = document.getElementById(elementId);
+            if (isValid) {
+                el.classList.remove('text-slate-500');
+                el.classList.add('text-emerald-500');
+                el.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i> ${el.innerText}`;
+            } else {
+                el.classList.add('text-slate-500');
+                el.classList.remove('text-emerald-500');
+                el.innerHTML = `<i data-lucide="x" class="w-3.5 h-3.5"></i> ${el.innerText}`;
+            }
+            lucide.createIcons(); // Re-renderiza o ícone novo
+        }
+
+        function updateStrengthMeter(pwd) {
+            if (!pwd) {
+                strengthBar.style.width = '0%';
+                strengthBar.className = 'h-full w-0 transition-all duration-500 ease-out';
+                strengthText.textContent = '';
+                return;
+            }
+
+            let score = 0;
+            if (pwd.length > 0) score += 10;
+            if (pwd.length >= 8) score += 20;
+            if (pwd.length >= 12) score += 10;
+            if (/[a-z]/.test(pwd)) score += 15;
+            if (/[A-Z]/.test(pwd)) score += 15;
+            if (/[0-9]/.test(pwd)) score += 15;
+            if (/[^A-Za-z0-9]/.test(pwd)) score += 15;
+
+            let width, colorClass, text;
+
+            if (score < 30) {
+                width = '20%';
+                colorClass = 'bg-red-500';
+                text = 'Muito Fraca';
+            } else if (score < 50) {
+                width = '40%';
+                colorClass = 'bg-orange-500';
+                text = 'Fraca';
+            } else if (score < 70) {
+                width = '60%';
+                colorClass = 'bg-yellow-400';
+                text = 'Boa';
+            } else if (score < 90) {
+                width = '80%';
+                colorClass = 'bg-lime-400';
+                text = 'Muito Boa';
+            } else {
+                width = '100%';
+                colorClass = 'bg-emerald-500';
+                text = 'Excelente';
+            }
+
+            strengthBar.style.width = width;
+            strengthBar.className = `h-full transition-all duration-500 ease-out ${colorClass}`;
+            strengthText.textContent = text;
+            strengthText.className = `text-xs font-bold ${colorClass.replace('bg-', 'text-')}`;
+        }
+
+        pwdInput.addEventListener('input', checkPasswordRules);
+        pwdConfirmInput.addEventListener('input', checkPasswordRules);
+
+        // 4. Submissão (Integração com Backend)
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorBox.classList.add('hidden');
+
+            const senha = pwdInput.value;
+            const senhaRepetida = pwdConfirmInput.value;
+
+            // Estado de Carregamento
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Salvando...</span>`;
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            lucide.createIcons();
+
+            // ==========================================
+            // INTEGRAÇÃO FUTURA COM SEU NODE.JS
+            // Rota: const resetarSenha = async (req, res) => {...}
+            // ==========================================
+            /*
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/resetar-senha', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        token: urlToken,
+                        email: urlEmail,
+                        senha: senha,
+                        senhaRepetida: senhaRepetida
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Erro ao tentar redefinir a senha.");
+                }
+
+                // SUCESSO! Mostra a tela verde.
+                showSuccessState();
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorBox.classList.remove('hidden');
+                
+                // Restaura o botão
+                submitBtn.innerHTML = originalContent;
+                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+                lucide.createIcons();
+            }
+            */
+
+            // ==========================================
+            // MOCK PARA VISUALIZAÇÃO ATUAL (Remova após ligar a API)
+            // ==========================================
+            setTimeout(() => {
+                showSuccessState();
+            }, 1500);
+        });
+
+        function showSuccessState() {
+            const successContainer = document.getElementById('success-container');
+
+            resetContainer.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                resetContainer.classList.add('hidden');
+                successContainer.classList.remove('hidden');
+
+                setTimeout(() => {
+                    successContainer.classList.remove('opacity-0', 'scale-95');
+                    successContainer.classList.add('opacity-100', 'scale-100');
+                }, 50);
+
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>

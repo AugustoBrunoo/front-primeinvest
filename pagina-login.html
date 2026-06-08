@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeInvest | Acesse sua conta</title>
+
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores (Mesma da Landing Page) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        prime: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        slate: {
+                            850: '#151e2e',
+                            900: '#0F172A',
+                            950: '#0B0F19',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-header {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .input-fintech {
+            background: #0B0F19;
+            border: 1px solid #1F2937;
+            transition: all 0.2s ease;
+        }
+
+        .input-fintech:focus-within {
+            border-color: #EAB308;
+            box-shadow: 0 0 0 1px #EAB308;
+        }
+
+        /* Checkbox Customizado */
+        .custom-checkbox:checked {
+            background-color: #EAB308;
+            border-color: #EAB308;
+        }
+        
+        .custom-checkbox:checked + svg {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col relative overflow-hidden">
+
+    <!-- Elementos Decorativos de Fundo (Ambientação Imersiva) -->
+    <div class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-prime-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <!-- Navbar Minimalista -->
+    <nav class="absolute w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <!-- Logo PrimeInvest -->
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer group">
+                    <div class="w-9 h-9 rounded-lg bg-prime-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-prime-500/20 group-hover:scale-105 transition-transform">
+                        P
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-white">Prime<span class="text-prime-500 font-medium">Invest</span></span>
+                </a>
+
+                <!-- Voltar -->
+                <a href="index.html" class="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    Voltar ao início
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content (Centralizado) -->
+    <main class="flex-grow flex items-center justify-center px-4 relative z-10 py-24">
+        
+        <div class="w-full max-w-md">
+            
+            <!-- Cabeçalho do Form -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">Bem-vindo de volta</h1>
+                <p class="text-slate-400 text-sm">Acesse sua conta para continuar investindo.</p>
+            </div>
+
+            <!-- Card do Formulário -->
+            <div class="bg-[#0F172A]/90 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8">
+                
+                <form id="login-form" class="space-y-5">
+                    
+                    <!-- Campo E-mail / CPF -->
+                    <div>
+                        <label for="document" class="block text-sm font-medium text-slate-300 mb-1.5">E-mail ou CPF</label>
+                        <div class="relative input-fintech rounded-lg flex items-center">
+                            <div class="pl-4 text-slate-500">
+                                <i data-lucide="user" class="w-5 h-5"></i>
+                            </div>
+                            <input type="text" id="document" 
+                                class="w-full bg-transparent border-none text-white px-3 py-3.5 focus:outline-none placeholder-slate-600 text-sm" 
+                                placeholder="Digite seu e-mail ou CPF" required>
+                        </div>
+                    </div>
+
+                    <!-- Campo Senha -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label for="password" class="block text-sm font-medium text-slate-300">Senha</label>
+                            <a href="./recuperar-senha.html" class="text-xs font-medium text-prime-500 hover:text-prime-400 transition-colors">Esqueceu a senha?</a>
+                        </div>
+                        <div class="relative input-fintech rounded-lg flex items-center">
+                            <div class="pl-4 text-slate-500">
+                                <i data-lucide="lock" class="w-5 h-5"></i>
+                            </div>
+                            <input type="password" id="password" 
+                                class="w-full bg-transparent border-none text-white px-3 py-3.5 focus:outline-none placeholder-slate-600 text-sm" 
+                                placeholder="••••••••" required>
+                            
+                            <!-- Toggle View Password -->
+                            <button type="button" id="toggle-password" class="pr-4 text-slate-500 hover:text-slate-300 focus:outline-none transition-colors">
+                                <i data-lucide="eye" id="eye-icon" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lembrar de mim -->
+                    <div class="flex items-center">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" id="remember" class="custom-checkbox appearance-none w-4 h-4 border border-slate-600 rounded bg-[#0B0F19] cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-prime-500/50 focus:ring-offset-1 focus:ring-offset-[#0F172A]">
+                            <svg class="w-3 h-3 text-slate-900 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.6666 3.5L5.24992 9.91667L2.33325 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <label for="remember" class="ml-2 block text-sm text-slate-400 cursor-pointer select-none">Lembrar meus dados</label>
+                    </div>
+
+                    <!-- Botão Submit -->
+                    <button type="submit" id="submit-btn" class="w-full bg-prime-500 hover:bg-prime-400 text-slate-900 font-semibold py-3.5 px-4 rounded-lg transition-all duration-200 shadow-lg shadow-prime-500/20 flex items-center justify-center gap-2 mt-2">
+                        <span>Acessar Plataforma</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </form>
+
+                <!-- Divisor -->
+                <div class="mt-8 mb-6 relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-800"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-3 bg-[#0F172A] text-slate-500 text-xs uppercase tracking-wider font-semibold">Ou acesse com</span>
+                    </div>
+                </div>
+
+                <!-- Acesso Ecossistema PrimeBank -->
+                <button type="button" class="w-full bg-[#151E2E] hover:bg-[#1E293B] border border-slate-700 hover:border-purple-500/50 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-3 group">
+                    <div class="w-6 h-6 rounded bg-purple-600 flex items-center justify-center text-white font-bold text-[10px] shadow-sm">
+                        P
+                    </div>
+                    <span>Conta Digital PrimeBank</span>
+                </button>
+
+            </div>
+
+            <!-- Footer do Card -->
+            <p class="mt-8 text-center text-sm text-slate-400">
+                Ainda não tem uma conta? 
+                <a href="#" class="font-semibold text-prime-500 hover:text-prime-400 transition-colors">Abra sua conta grátis</a>
+            </p>
+
+        </div>
+    </main>
+
+    <!-- Rodapé Super Simples -->
+    <footer class="py-6 text-center text-xs text-slate-600 relative z-10">
+        <p>&copy; 2026 PrimeInvest. Ambiente seguro e criptografado.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Inicializa ícones Lucide
+        lucide.createIcons();
+
+        // Lógica de Mostrar/Ocultar Senha
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Troca o ícone recriando-o (Lucide)
+            const iconName = type === 'password' ? 'eye' : 'eye-off';
+            togglePassword.innerHTML = `<i data-lucide="${iconName}" id="eye-icon" class="w-5 h-5"></i>`;
+            lucide.createIcons();
+        });
+
+        // Simulação de Submissão do Formulário (Efeito Visual)
+        const loginForm = document.getElementById('login-form');
+        const submitBtn = document.getElementById('submit-btn');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Estado de "Carregando"
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Autenticando...</span>`;
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            lucide.createIcons();
+
+            // Simula um delay de API
+            setTimeout(() => {
+                // Como é um mockup, não redirecionamos, apenas voltamos o botão ao normal
+                submitBtn.innerHTML = originalContent;
+                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+                lucide.createIcons();
+                
+                // Limpa a senha
+                passwordInput.value = '';
+                
+                // Mensagem fictícia no console
+                console.log("Login submetido com sucesso!");
+                window.location.href = '/homebroker/mercadoDeAçoes.html';
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>
