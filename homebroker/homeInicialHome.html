@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeInvest | Painel Principal</title>
+
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores e Animações -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        prime: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        slate: {
+                            850: '#151e2e',
+                            900: '#0F172A',
+                            950: '#0B0F19',
+                        }
+                    },
+                    animation: {
+                        'slide-in': 'slideIn 0.3s ease-out forwards',
+                        'fade-in-up': 'fadeInUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        slideIn: {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        fadeInUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1F2937;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card-hover-effect {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover-effect:hover {
+            transform: translateY(-4px);
+            border-color: rgba(234, 179, 8, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(234, 179, 8, 0.1);
+        }
+
+        .modal-active {
+            display: flex !important;
+        }
+
+        /* Classes utilitárias para o Sidebar */
+        .sidebar-active {
+            transform: translateX(0) !important;
+        }
+
+        .overlay-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[#0B0F19] text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Top Navbar Minimalista -->
+    <nav class="glass-panel z-40 flex-shrink-0 sticky top-0">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded bg-prime-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-prime-500/20">
+                        P
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-white">Prime<span
+                            class="text-prime-500 font-medium">Invest</span></span>
+                </div>
+
+                <!-- Botão Menu Hambúrguer -->
+                <div class="flex items-center">
+                    <button onclick="abrirSidebar()"
+                        class="flex items-center gap-2 text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors focus:outline-none">
+                        <span class="text-sm font-medium hidden sm:block">Menu</span>
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- ASIDE / DRAWER (MENU LATERAL)              -->
+    <!-- ========================================== -->
+
+    <!-- Overlay Escuro -->
+    <div id="sidebar-overlay" onclick="fecharSidebar()"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[50] opacity-0 pointer-events-none transition-opacity duration-300">
+    </div>
+
+    <!-- Container do Menu Lateral -->
+    <aside id="sidebar"
+        class="fixed top-0 right-0 h-full w-full sm:w-[360px] bg-[#0F172A] border-l border-slate-700 shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+
+        <!-- Header do Aside -->
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-[#151E2E]/30">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-6 h-6 rounded bg-prime-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm shadow-prime-500/20">
+                    P</div>
+                <span class="font-bold text-white tracking-tight">Menu Principal</span>
+            </div>
+            <button onclick="fecharSidebar()"
+                class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Container de Perfil do Usuário -->
+        <div
+            class="p-6 border-b border-slate-800 bg-gradient-to-b from-[#151E2E]/50 to-transparent relative overflow-hidden">
+            <!-- Efeito de brilho de fundo -->
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-prime-500/10 rounded-full blur-2xl pointer-events-none">
+            </div>
+
+            <div class="flex items-center gap-4 mb-5 relative z-10">
+                <div
+                    class="w-14 h-14 rounded-full bg-[#0B0F19] border-2 border-prime-500/50 flex items-center justify-center text-slate-300 shadow-lg">
+                    <i data-lucide="user" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white leading-tight">Carlos Henrique</h3>
+                    <p class="text-xs text-prime-400 font-medium mt-0.5">ID: #4829 &bull; Conta Prime</p>
+                </div>
+            </div>
+
+            <div class="flex gap-3 relative z-10">
+                <button
+                    class="flex-1 py-2.5 px-3 text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors border border-slate-700 shadow-sm flex items-center justify-center gap-2">
+                    <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i> Ajustes
+                </button>
+                <button onclick="fecharSidebar(); confirmarSaida()"
+                    class="flex-1 py-2.5 px-3 text-xs font-bold text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors border border-red-500/20 shadow-sm flex items-center justify-center gap-2">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+                </button>
+            </div>
+        </div>
+
+        <!-- Navegação -->
+        <nav class="flex-1 overflow-y-auto p-5 space-y-2 no-scrollbar">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Plataforma</p>
+
+            <!-- Link Ativo (Início) -->
+            <a href="#"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl bg-prime-500/10 text-prime-400 border border-prime-500/20 font-semibold transition-colors group">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Início
+                </div>
+                <div class="w-1.5 h-1.5 rounded-full bg-prime-500"></div>
+            </a>
+
+            <a href="homebroker.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="line-chart"
+                        class="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition-colors"></i> Mercado
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+
+            <a href="carteira.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="briefcase"
+                        class="w-5 h-5 text-slate-400 group-hover:text-prime-400 transition-colors"></i> Minha Carteira
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+
+            <a href="#"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="file-text"
+                        class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors"></i> Conta
+                    Corrente
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+        </nav>
+
+        <!-- Footer do Menu -->
+        <div class="p-5 border-t border-slate-800 bg-[#0B0F19]">
+            <div class="flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
+                <span>&copy; 2026 PrimeInvest</span>
+                <span>&bull;</span>
+                <span class="text-prime-500/70">Ambiente Seguro</span>
+            </div>
+        </div>
+    </aside>
+    <!-- ========================================== -->
+
+
+    <!-- Main Content Area -->
+    <main
+        class="flex-grow flex flex-col max-w-[1400px] w-full mx-auto p-4 sm:p-6 lg:p-8 relative z-10 animate-fade-in-up">
+
+        <!-- HEADER / GREETING SECTION -->
+        <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight flex items-center gap-3">
+                    Olá, Carlos Henrique!
+                </h1>
+                <p class="text-slate-400 text-sm md:text-base">Bem-vindo de volta ao seu painel de controle do
+                    PrimeInvest.</p>
+            </div>
+
+            <!-- Controle do Relógio Simples -->
+            <!-- <div class="bg-[#151E2E] border border-slate-700 rounded-lg py-2 px-4 flex items-center gap-3 shadow-md">
+                <i data-lucide="clock" class="w-4 h-4 text-prime-500"></i>
+                <div>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest leading-none mb-1">Horário Simulado
+                    </p>
+                    <p class="text-sm font-mono font-bold text-white leading-none">14:00</p>
+                </div>
+            </div> -->
+        </div>
+
+        <!-- DASHBOARD GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+
+            <!-- BIG CARD: Resumo Financeiro -->
+            <div
+                class="lg:col-span-2 bg-gradient-to-br from-[#1E293B] to-[#0F172A] border border-slate-700 rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                <!-- Brilho de fundo -->
+                <div
+                    class="absolute -right-20 -top-20 w-64 h-64 bg-prime-500/10 rounded-full blur-[80px] pointer-events-none">
+                </div>
+
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Saldo da Conta -->
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="wallet" class="w-4 h-4 text-emerald-500"></i>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Saldo da Conta</p>
+                        </div>
+                        <h2 class="text-4xl font-bold text-white tracking-tight mb-2">R$ 15.000,00</h2>
+                        <p class="text-xs text-slate-500">Disponível para novos investimentos</p>
+                    </div>
+
+                    <!-- Patrimônio em Ações -->
+                    <div class="md:border-l border-slate-700/60 md:pl-8">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-prime-500/10 border border-prime-500/20 flex items-center justify-center">
+                                <i data-lucide="pie-chart" class="w-4 h-4 text-prime-500"></i>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Patrimônio
+                                Investido</p>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white tracking-tight mb-2" id="dash-patrimonio">R$ 18.805,00
+                        </h2>
+                        <div
+                            class="flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 w-fit px-2 py-1 rounded border border-emerald-500/20">
+                            <i data-lucide="trending-up" class="w-3 h-3"></i> +1.45% de lucro global
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botões de Ação Rápida embaixo do card -->
+                <div class="relative z-10 mt-8 pt-6 border-t border-slate-700/60 flex flex-wrap gap-3">
+                    <button
+                        class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-sm font-medium text-white transition-colors">
+                        <i data-lucide="arrow-down-to-line" class="w-4 h-4 text-emerald-400"></i> Depositar
+                    </button>
+                    <button
+                        class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-sm font-medium text-white transition-colors">
+                        <i data-lucide="arrow-up-from-line" class="w-4 h-4 text-slate-400"></i> Retirar
+                    </button>
+                </div>
+            </div>
+
+            <!-- MENU DE NAVEGAÇÃO RÁPIDA (Lateral em Desktop) -->
+            <div class="flex flex-col gap-4">
+
+                <!-- Card Link: Mercado -->
+                <a href="homebroker.html"
+                    class="bg-[#151E2E] border border-slate-700 rounded-xl p-5 flex items-center gap-4 card-hover-effect group">
+                    <div
+                        class="w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i data-lucide="line-chart" class="w-6 h-6 text-blue-500"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-white font-bold text-base mb-0.5">Mercado (Home Broker)</h3>
+                        <p class="text-xs text-slate-400">Acompanhe preços e opere ativos</p>
+                    </div>
+                    <i data-lucide="chevron-right"
+                        class="w-5 h-5 text-slate-600 group-hover:text-prime-500 transition-colors"></i>
+                </a>
+
+                <!-- Card Link: Carteira -->
+                <a href="carteira.html"
+                    class="bg-[#151E2E] border border-slate-700 rounded-xl p-5 flex items-center gap-4 card-hover-effect group">
+                    <div
+                        class="w-12 h-12 rounded-full bg-prime-500/10 border border-prime-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i data-lucide="briefcase" class="w-6 h-6 text-prime-500"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-white font-bold text-base mb-0.5">Minha Carteira</h3>
+                        <p class="text-xs text-slate-400">Gerencie suas posições e lucros</p>
+                    </div>
+                    <i data-lucide="chevron-right"
+                        class="w-5 h-5 text-slate-600 group-hover:text-prime-500 transition-colors"></i>
+                </a>
+
+                <!-- Card Link: Conta Corrente -->
+                <a href="#"
+                    class="bg-[#151E2E] border border-slate-700 rounded-xl p-5 flex items-center gap-4 card-hover-effect group">
+                    <div
+                        class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i data-lucide="file-text" class="w-6 h-6 text-emerald-500"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-white font-bold text-base mb-0.5">Conta Corrente</h3>
+                        <p class="text-xs text-slate-400">Ver extrato e transferências</p>
+                    </div>
+                    <i data-lucide="chevron-right"
+                        class="w-5 h-5 text-slate-600 group-hover:text-prime-500 transition-colors"></i>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- SEÇÃO: MAIORES COTAS (TOP HOLDINGS) -->
+        <div class="mb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i data-lucide="star" class="w-5 h-5 text-prime-500"></i> Suas Maiores Posições
+                </h2>
+                <p class="text-sm text-slate-400 mt-1">Os ativos com maior valor investido na sua carteira.</p>
+            </div>
+            <a href="carteira.html"
+                class="text-sm font-medium text-prime-500 hover:text-prime-400 flex items-center gap-1 group transition-colors">
+                Ver carteira completa
+                <i data-lucide="arrow-right"
+                    class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"></i>
+            </a>
+        </div>
+
+        <!-- Grid de Cotas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="top-holdings-container">
+            <!-- Mock Card 1 -->
+            <div class="bg-[#0F172A] border border-slate-800 hover:border-slate-600 rounded-xl p-5 transition-colors">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-sm text-slate-300 font-bold">
+                            PE</div>
+                        <div>
+                            <h4 class="font-bold text-white text-lg leading-none mb-1">PETR4</h4>
+                            <p class="text-xs text-slate-400 leading-none">500 ações</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span
+                            class="text-xs font-bold px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                            <i data-lucide="trending-up" class="w-3 h-3"></i> +0.64%
+                        </span>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-800/80 flex justify-between items-end">
+                    <div>
+                        <p class="text-xs text-slate-500 mb-0.5">Valor Total</p>
+                        <p class="font-bold text-white">R$ 15.520,00</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-slate-500 mb-0.5">Preço Atual</p>
+                        <p class="font-medium text-slate-300">R$ 31,04</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mock Card 2 -->
+            <div class="bg-[#0F172A] border border-slate-800 hover:border-slate-600 rounded-xl p-5 transition-colors">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-sm text-slate-300 font-bold">
+                            VA</div>
+                        <div>
+                            <h4 class="font-bold text-white text-lg leading-none mb-1">VALE5</h4>
+                            <p class="text-xs text-slate-400 leading-none">100 ações</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span
+                            class="text-xs font-bold px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1">
+                            <i data-lucide="trending-down" class="w-3 h-3"></i> -1.20%
+                        </span>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-800/80 flex justify-between items-end">
+                    <div>
+                        <p class="text-xs text-slate-500 mb-0.5">Valor Total</p>
+                        <p class="font-bold text-white">R$ 3.285,00</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-slate-500 mb-0.5">Preço Atual</p>
+                        <p class="font-medium text-slate-300">R$ 32,85</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mock Card 3 (Placeholder) -->
+            <div class="bg-[#0F172A] border border-slate-800 border-dashed rounded-xl p-5 flex flex-col items-center justify-center text-center group transition-colors hover:border-prime-500/50 cursor-pointer"
+                onclick="window.location.href='homebroker.html'">
+                <div
+                    class="w-12 h-12 rounded-full bg-slate-800/50 flex items-center justify-center mb-3 group-hover:bg-prime-500/10 transition-colors">
+                    <i data-lucide="plus"
+                        class="w-6 h-6 text-slate-500 group-hover:text-prime-500 transition-colors"></i>
+                </div>
+                <h4 class="font-medium text-slate-300 mb-1">Diversifique sua carteira</h4>
+                <p class="text-xs text-slate-500">Acesse o mercado e adicione novas ações ao seu portfólio.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal de Confirmação Padrão (Logout) -->
+    <div id="modal-confirm"
+        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div
+            class="bg-[#0F172A] border border-slate-700 rounded-2xl w-full max-w-sm shadow-2xl p-6 text-center animate-[fadeIn_0.15s_ease-out]">
+            <div
+                class="w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="alert-triangle" class="w-7 h-7 text-red-500"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2 tracking-tight">Sair da Conta?</h3>
+            <p class="text-sm text-slate-400 mb-8 leading-relaxed">Suas ordens condicionais continuarão rodando em
+                segundo plano.</p>
+            <div class="flex gap-3">
+                <button onclick="fecharElemento('modal-confirm')"
+                    class="flex-1 py-3 rounded-lg border border-slate-700 text-slate-300 font-medium hover:bg-slate-800 transition-colors">Cancelar</button>
+                <button onclick="window.location.href='login.html'"
+                    class="flex-1 py-3 rounded-lg bg-red-600 text-white font-bold hover:bg-red-500 transition-colors shadow-lg shadow-red-500/20">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        // Helpers de UI 
+        function abrirSidebar() {
+            document.getElementById('sidebar-overlay').classList.remove('hidden');
+            document.getElementById('sidebar').classList.add('sidebar-active');
+
+            // Pequeno delay para a transição de opacidade funcionar
+            setTimeout(() => {
+                document.getElementById('sidebar-overlay').classList.add('overlay-active');
+            }, 10);
+        }
+
+        function fecharSidebar() {
+            document.getElementById('sidebar').classList.remove('sidebar-active');
+            document.getElementById('sidebar-overlay').classList.remove('overlay-active');
+
+            // Aguarda a transição terminar para aplicar o hidden
+            setTimeout(() => {
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+            }, 300);
+        }
+
+        function fecharElemento(id) {
+            document.getElementById(id).classList.remove('modal-active');
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Ação Sair da Conta
+        function confirmarSaida() {
+            // Abre o modal
+            document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('modal-confirm').classList.add('modal-active');
+        }
+    </script>
+</body>
+
+</html>
