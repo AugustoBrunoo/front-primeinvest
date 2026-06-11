@@ -109,8 +109,14 @@
             display: flex !important;
         }
 
-        .dropdown-active {
-            display: block !important;
+        /* Classes utilitárias para o Sidebar */
+        .sidebar-active {
+            transform: translateX(0) !important;
+        }
+
+        .overlay-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
     </style>
 </head>
@@ -118,7 +124,7 @@
 <body
     class="bg-[#0B0F19] text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col overflow-x-hidden">
 
-    <!-- Top Navbar -->
+    <!-- Top Navbar Minimalista -->
     <nav class="glass-panel z-40 flex-shrink-0 sticky top-0">
         <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -132,108 +138,131 @@
                             class="text-prime-500 font-medium">Invest</span></span>
                 </div>
 
-                <!-- Main Menu (Desktop) -->
-                <div class="hidden md:flex items-center space-x-1">
-                    <a href="#"
-                        class="px-4 py-2 rounded-lg bg-slate-800/50 text-white text-sm font-medium border border-slate-700">Mercado</a>
-                    <a href="./minhaCarteira.html"
-                        class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/30 text-sm font-medium transition-colors">Minha
-                        Carteira</a>
-                    <a href="#"
-                        class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/30 text-sm font-medium transition-colors">Conta
-                        Corrente</a>
-                </div>
-
-                <!-- Direita: User Profile & Mobile Toggle -->
+                <!-- Botão Menu Hambúrguer -->
                 <div class="flex items-center">
-
-                    <!-- User Dropdown Menu (Escondido no Mobile) -->
-                    <div class="relative hidden md:flex items-center md:border-l md:border-slate-800 md:pl-4">
-                        <button id="user-menu-btn" onclick="toggleDropdown('user-dropdown')"
-                            class="flex items-center gap-3 focus:outline-none group p-1 rounded-lg hover:bg-slate-800/50 transition-colors">
-                            <div class="flex flex-col text-right">
-                                <span
-                                    class="text-sm font-semibold text-white group-hover:text-prime-400 transition-colors">Carlos
-                                    Henrique</span>
-                            </div>
-                            <div
-                                class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-white group-hover:bg-slate-700 transition-colors border border-slate-700">
-                                <i data-lucide="user" class="w-4 h-4"></i>
-                            </div>
-                            <i data-lucide="chevron-down"
-                                class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"></i>
-                        </button>
-
-                        <!-- Painel Dropdown do Usuário (Desktop) -->
-                        <div id="user-dropdown"
-                            class="hidden absolute right-0 top-12 mt-2 w-48 bg-[#0F172A] border border-slate-700 rounded-xl shadow-2xl py-2 z-50 animate-[fadeIn_0.1s_ease-out]">
-                            <a href="#"
-                                class="flex items-center px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
-                                <i data-lucide="settings" class="w-4 h-4 mr-3 text-slate-500"></i> Configurações
-                            </a>
-                            <div class="border-t border-slate-800 my-1"></div>
-                            <button onclick="confirmarSaida()"
-                                class="w-full flex items-center px-4 py-2.5 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors text-left">
-                                <i data-lucide="log-out" class="w-4 h-4 mr-3 text-red-400/70"></i> Sair da Conta
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Mobile Menu Toggle -->
-                    <button onclick="toggleDropdown('mobile-menu')"
-                        class="md:hidden ml-4 text-slate-400 hover:text-white focus:outline-none">
+                    <button onclick="abrirSidebar()"
+                        class="flex items-center gap-2 text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors focus:outline-none">
+                        <span class="text-sm font-medium hidden sm:block">Menu</span>
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu"
-            class="hidden md:hidden absolute top-16 left-0 w-full bg-[#0F172A] border-b border-slate-800 shadow-xl z-40">
-            <div class="px-4 pt-4 pb-6 space-y-2">
-                <a href="#"
-                    class="block px-4 py-3 rounded-md text-base font-medium bg-slate-800/50 text-white border border-slate-700">Mercado</a>
-                <a href="./minhaCarteira.html"
-                    class="block px-4 py-3 rounded-md text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/30">Minha
-                    Carteira</a>
-                <a href="#"
-                    class="block px-4 py-3 rounded-md text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/30">Conta
-                    Corrente</a>
+    <!-- ========================================== -->
+    <!-- ASIDE / DRAWER (MENU LATERAL)              -->
+    <!-- ========================================== -->
 
-                <div class="border-t border-slate-800 my-4"></div>
+    <!-- Overlay Escuro -->
+    <div id="sidebar-overlay" onclick="fecharSidebar()"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[50] opacity-0 pointer-events-none transition-opacity duration-300">
+    </div>
 
-                <!-- Perfil do Usuário Mobile -->
-                <div class="relative">
-                    <button onclick="toggleDropdown('user-mobile-dropdown')"
-                        class="w-full flex items-center justify-between p-3 border border-slate-700 rounded-lg bg-[#0B0F19] hover:bg-slate-800 transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 border border-slate-700">
-                                <i data-lucide="user" class="w-5 h-5"></i>
-                            </div>
-                            <span class="text-base font-semibold text-white">Carlos Henrique</span>
-                        </div>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i>
-                    </button>
+    <!-- Container do Menu Lateral -->
+    <aside id="sidebar"
+        class="fixed top-0 right-0 h-full w-full sm:w-[360px] bg-[#0F172A] border-l border-slate-700 shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
 
-                    <!-- Dropdown Mobile -->
-                    <div id="user-mobile-dropdown"
-                        class="hidden mt-2 bg-[#151E2E] border border-slate-700 rounded-lg overflow-hidden animate-[fadeIn_0.1s_ease-out]">
-                        <a href="#"
-                            class="flex items-center px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
-                            <i data-lucide="settings" class="w-5 h-5 mr-3 text-slate-500"></i> Configurações
-                        </a>
-                        <div class="border-t border-slate-800"></div>
-                        <button onclick="confirmarSaida()"
-                            class="w-full flex items-center px-4 py-3 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors text-left">
-                            <i data-lucide="log-out" class="w-5 h-5 mr-3 text-red-400/70"></i> Sair da Conta
-                        </button>
-                    </div>
+        <!-- Header do Aside -->
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-[#151E2E]/30">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-6 h-6 rounded bg-prime-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm shadow-prime-500/20">
+                    P</div>
+                <span class="font-bold text-white tracking-tight">Menu Principal</span>
+            </div>
+            <button onclick="fecharSidebar()"
+                class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Container de Perfil do Usuário -->
+        <div
+            class="p-6 border-b border-slate-800 bg-gradient-to-b from-[#151E2E]/50 to-transparent relative overflow-hidden">
+            <!-- Efeito de brilho de fundo -->
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-prime-500/10 rounded-full blur-2xl pointer-events-none">
+            </div>
+
+            <div class="flex items-center gap-4 mb-5 relative z-10">
+                <div
+                    class="w-14 h-14 rounded-full bg-[#0B0F19] border-2 border-prime-500/50 flex items-center justify-center text-slate-300 shadow-lg">
+                    <i data-lucide="user" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white leading-tight">Carlos Henrique</h3>
+                    <p class="text-xs text-prime-400 font-medium mt-0.5">ID: #4829 &bull; Conta Prime</p>
                 </div>
             </div>
+
+            <div class="flex gap-3 relative z-10">
+                <button
+                    class="flex-1 py-2.5 px-3 text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors border border-slate-700 shadow-sm flex items-center justify-center gap-2">
+                    <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i> Ajustes
+                </button>
+                <button onclick="fecharSidebar(); confirmarSaida()"
+                    class="flex-1 py-2.5 px-3 text-xs font-bold text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors border border-red-500/20 shadow-sm flex items-center justify-center gap-2">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+                </button>
+            </div>
         </div>
-    </nav>
+
+        <!-- Navegação -->
+        <nav class="flex-1 overflow-y-auto p-5 space-y-2 no-scrollbar">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Plataforma</p>
+
+            <a href="./homeInicialHome.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="layout-dashboard"
+                        class="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition-colors"></i> Início
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+
+            <!-- Link Ativo (Mercado) -->
+            <a href="./mercadoDeAçoes.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl bg-prime-500/10 text-prime-400 border border-prime-500/20 font-semibold transition-colors group">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="line-chart" class="w-5 h-5"></i> Mercado
+                </div>
+                <div class="w-1.5 h-1.5 rounded-full bg-prime-500"></div>
+            </a>
+
+            <a href="./minhaCarteira.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="briefcase"
+                        class="w-5 h-5 text-slate-400 group-hover:text-prime-400 transition-colors"></i> Minha Carteira
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+
+            <a href="./contaCorrente.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="file-text"
+                        class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors"></i> Conta
+                    Corrente
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+        </nav>
+
+        <!-- Footer do Menu -->
+        <div class="p-5 border-t border-slate-800 bg-[#0B0F19]">
+            <div class="flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
+                <span>&copy; 2026 PrimeInvest</span>
+                <span>&bull;</span>
+                <span class="text-prime-500/70">Ambiente Seguro</span>
+            </div>
+        </div>
+    </aside>
+    <!-- ========================================== -->
+
 
     <!-- Main Content Area -->
     <main class="flex-grow flex flex-col max-w-[1400px] w-full mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
@@ -286,9 +315,9 @@
                         class="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white transition-colors shadow-sm flex items-center gap-1">
                         +1 min
                     </button>
-                    <button onclick="avancarTempo(5)"
+                    <button onclick="abrirOffcanvasTempo()"
                         class="px-3 py-1.5 rounded bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 text-xs font-bold text-blue-400 transition-colors shadow-sm flex items-center gap-1">
-                        +5 min
+                        <i data-lucide="settings-2" class="w-3.5 h-3.5"></i> Ajustar
                     </button>
                 </div>
             </div>
@@ -384,6 +413,64 @@
             </div>
         </div>
     </div>
+
+
+    <!-- ========================================== -->
+    <!-- OFFCANVAS DE TEMPO CUSTOMIZADO             -->
+    <!-- ========================================== -->
+
+    <!-- Overlay Escuro Tempo -->
+    <div id="offcanvas-tempo-overlay" onclick="fecharOffcanvasTempo()"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[50] opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+    </div>
+
+    <!-- Container do Menu Lateral Tempo -->
+    <aside id="offcanvas-tempo"
+        class="fixed top-0 right-0 h-full w-full sm:w-[360px] bg-[#0F172A] border-l border-slate-700 shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+
+        <!-- Header do Aside Tempo -->
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-[#151E2E]/30">
+            <div class="flex items-center gap-2">
+                <i data-lucide="clock" class="w-5 h-5 text-prime-500"></i>
+                <span class="font-bold text-white tracking-tight">Avançar Relógio</span>
+            </div>
+            <button onclick="fecharOffcanvasTempo()"
+                class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Conteúdo do Offcanvas Tempo -->
+        <div class="p-6 flex-1 overflow-y-auto">
+            <p class="text-sm text-slate-400 mb-6">O mercado simulado encerra suas atividades no minuto 59. Defina
+                abaixo quantos minutos deseja avançar.</p>
+
+            <div
+                class="bg-[#151E2E] border border-slate-800 rounded-lg p-4 mb-6 flex justify-between items-center shadow-inner">
+                <span class="text-sm font-medium text-slate-400">Minuto Atual:</span>
+                <span class="text-2xl font-bold text-white font-mono" id="offcanvas-minuto-atual">0</span>
+            </div>
+
+            <div class="mb-8">
+                <label class="block text-xs font-medium text-slate-300 mb-2">Minutos a avançar</label>
+                <div class="relative input-fintech rounded-lg flex items-center shadow-sm">
+                    <div class="pl-4 text-slate-500">
+                        <i data-lucide="fast-forward" class="w-5 h-5"></i>
+                    </div>
+                    <input type="number" id="input-minutos-avancar" min="1" max="59"
+                        class="w-full bg-transparent border-none text-white px-3 py-3.5 focus:outline-none placeholder-slate-600 text-sm"
+                        placeholder="Ex: 5">
+                </div>
+                <p class="text-[10px] text-slate-500 mt-2"><i data-lucide="info" class="w-3 h-3 inline mr-0.5"></i>
+                    Valores negativos ou acima de 59 não são permitidos.</p>
+            </div>
+
+            <button onclick="processarAvancoCustomizado()"
+                class="w-full py-3.5 rounded-lg bg-prime-500 text-slate-900 font-bold hover:bg-prime-400 transition-colors shadow-lg shadow-prime-500/20 flex items-center justify-center gap-2">
+                Avançar Tempo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </aside>
 
 
     <!-- ========================================== -->
@@ -515,19 +602,73 @@
         // ==========================================
         // UI & HELPERS GERAIS (MENUS, TOASTS E MODAIS)
         // ==========================================
-        function toggleDropdown(id) {
-            const el = document.getElementById(id);
-            el.classList.toggle('hidden');
+        function abrirSidebar() {
+            document.getElementById('sidebar-overlay').classList.remove('hidden');
+            document.getElementById('sidebar').classList.add('sidebar-active');
+
+            // Pequeno delay para a transição de opacidade funcionar
+            setTimeout(() => {
+                document.getElementById('sidebar-overlay').classList.add('overlay-active');
+            }, 10);
         }
 
-        // Fechar dropdowns ao clicar fora
-        document.addEventListener('click', function (event) {
-            const userBtn = document.getElementById('user-menu-btn');
-            const userMenu = document.getElementById('user-dropdown');
-            if (userBtn && userMenu && !userBtn.contains(event.target) && !userMenu.contains(event.target)) {
-                userMenu.classList.add('hidden');
+        function fecharSidebar() {
+            document.getElementById('sidebar').classList.remove('sidebar-active');
+            document.getElementById('sidebar-overlay').classList.remove('overlay-active');
+
+            // Aguarda a transição terminar para aplicar o hidden
+            setTimeout(() => {
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+            }, 300);
+        }
+
+        // --- Offcanvas de Tempo ---
+        function abrirOffcanvasTempo() {
+            document.getElementById('offcanvas-minuto-atual').innerText = state.minutoAtual;
+            document.getElementById('input-minutos-avancar').value = '';
+
+            document.getElementById('offcanvas-tempo-overlay').classList.remove('hidden');
+            document.getElementById('offcanvas-tempo').classList.add('sidebar-active');
+
+            setTimeout(() => {
+                document.getElementById('offcanvas-tempo-overlay').classList.add('overlay-active');
+            }, 10);
+
+            lucide.createIcons();
+        }
+
+        function fecharOffcanvasTempo() {
+            document.getElementById('offcanvas-tempo').classList.remove('sidebar-active');
+            document.getElementById('offcanvas-tempo-overlay').classList.remove('overlay-active');
+
+            setTimeout(() => {
+                document.getElementById('offcanvas-tempo-overlay').classList.add('hidden');
+            }, 300);
+        }
+
+        function processarAvancoCustomizado() {
+            const inputVal = parseInt(document.getElementById('input-minutos-avancar').value);
+
+            if (isNaN(inputVal) || inputVal <= 0) {
+                mostrarAviso("Por favor, insira um valor válido e positivo (maior que zero).", "Minutos Inválidos");
+                return;
             }
-        });
+
+            if (state.minutoAtual + inputVal > 59) {
+                const minutosRestantes = 59 - state.minutoAtual;
+                if (minutosRestantes === 0) {
+                    mostrarAviso("O mercado já atingiu o minuto 59 e encerrou as atividades. Não é possível avançar mais.", "Mercado Fechado");
+                } else {
+                    mostrarAviso(`O mercado fecha no minuto 59. Você só pode avançar no máximo mais ${minutosRestantes} minuto(s).`, "Limite Excedido");
+                }
+                return;
+            }
+
+            fecharOffcanvasTempo();
+            avancarTempo(inputVal);
+            mostrarToast(`Relógio avançado em ${inputVal} minuto(s).`, 'sucesso');
+        }
+        // --------------------------
 
         // Controles de Modais Padrão
         function abrirModal(id) { document.getElementById(id).classList.add('modal-active'); }
@@ -604,10 +745,7 @@
 
         // Ação Sair da Conta
         function confirmarSaida() {
-            // Fecha dropdowns se estiverem abertos
-            document.getElementById('user-dropdown')?.classList.add('hidden');
-            document.getElementById('user-mobile-dropdown')?.classList.add('hidden');
-
+            fecharSidebar();
             mostrarConfirmacao(
                 "Tem certeza que deseja sair do sistema? Suas ordens condicionais continuarão rodando em segundo plano.",
                 "Sair da Conta",
@@ -647,8 +785,17 @@
         // 2. CONTROLE DO TEMPO E ATUALIZAÇÃO
         // ==========================================
         async function avancarTempo(minutosAdicionais) {
+            // Trava elegante caso clique em "+1 min" no minuto 59
+            if (state.minutoAtual >= 59) {
+                mostrarAviso("O mercado já atingiu o minuto 59 e está encerrado.", "Mercado Fechado");
+                return;
+            }
+
+            if (state.minutoAtual + minutosAdicionais > 59) {
+                minutosAdicionais = 59 - state.minutoAtual;
+            }
+
             state.minutoAtual += minutosAdicionais;
-            if (state.minutoAtual > 59) state.minutoAtual = 59;
             atualizarRelogio();
 
             // Simula flutuação de preços para ver o efeito de piscar

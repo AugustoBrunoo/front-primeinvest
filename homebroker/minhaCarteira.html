@@ -115,13 +115,23 @@
         .offcanvas-active {
             transform: translateX(0) !important;
         }
+
+        /* Classes utilitárias para o Sidebar Principal */
+        .sidebar-active {
+            transform: translateX(0) !important;
+        }
+
+        .overlay-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
     </style>
 </head>
 
 <body
     class="bg-[#0B0F19] text-slate-300 font-sans antialiased selection:bg-prime-500 selection:text-slate-900 min-h-screen flex flex-col overflow-x-hidden">
 
-    <!-- Top Navbar -->
+    <!-- Top Navbar Minimalista -->
     <nav class="glass-panel z-40 flex-shrink-0 sticky top-0">
         <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -135,105 +145,131 @@
                             class="text-prime-500 font-medium">Invest</span></span>
                 </div>
 
-                <!-- Main Menu (Desktop) -->
-                <div class="hidden md:flex items-center space-x-1">
-                    <a href="./mercadoDeAçoes.html"
-                        class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/30 text-sm font-medium transition-colors">Mercado</a>
-                    <a href="#"
-                        class="px-4 py-2 rounded-lg bg-slate-800/50 text-white text-sm font-medium border border-slate-700">Minha
-                        Carteira</a>
-                    <a href="#"
-                        class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/30 text-sm font-medium transition-colors">Conta
-                        Corrente</a>
-                </div>
-
-                <!-- Direita: User Profile & Mobile Toggle -->
+                <!-- Botão Menu Hambúrguer -->
                 <div class="flex items-center">
-
-                    <!-- User Dropdown Menu (Desktop) -->
-                    <div class="relative hidden md:flex items-center md:border-l md:border-slate-800 md:pl-4">
-                        <button id="user-menu-btn" onclick="toggleElement('user-dropdown')"
-                            class="flex items-center gap-3 focus:outline-none group p-1 rounded-lg hover:bg-slate-800/50 transition-colors">
-                            <div class="flex flex-col text-right">
-                                <span
-                                    class="text-sm font-semibold text-white group-hover:text-prime-400 transition-colors">Carlos
-                                    Henrique</span>
-                            </div>
-                            <div
-                                class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-white group-hover:bg-slate-700 transition-colors border border-slate-700">
-                                <i data-lucide="user" class="w-4 h-4"></i>
-                            </div>
-                            <i data-lucide="chevron-down"
-                                class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"></i>
-                        </button>
-
-                        <div id="user-dropdown"
-                            class="hidden absolute right-0 top-12 mt-2 w-48 bg-[#0F172A] border border-slate-700 rounded-xl shadow-2xl py-2 z-50 animate-[fadeIn_0.1s_ease-out]">
-                            <a href="#"
-                                class="flex items-center px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
-                                <i data-lucide="settings" class="w-4 h-4 mr-3 text-slate-500"></i> Configurações
-                            </a>
-                            <div class="border-t border-slate-800 my-1"></div>
-                            <button onclick="confirmarSaida()"
-                                class="w-full flex items-center px-4 py-2.5 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors text-left">
-                                <i data-lucide="log-out" class="w-4 h-4 mr-3 text-red-400/70"></i> Sair da Conta
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Mobile Menu Toggle -->
-                    <button onclick="toggleElement('mobile-menu')"
-                        class="md:hidden ml-4 text-slate-400 hover:text-white focus:outline-none">
+                    <button onclick="abrirSidebar()"
+                        class="flex items-center gap-2 text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors focus:outline-none">
+                        <span class="text-sm font-medium hidden sm:block">Menu</span>
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu"
-            class="hidden md:hidden absolute top-16 left-0 w-full bg-[#0F172A] border-b border-slate-800 shadow-xl z-40">
-            <div class="px-4 pt-4 pb-6 space-y-2">
-                <a href="./mercadoDeAçoes.html"
-                    class="block px-4 py-3 rounded-md text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/30">Mercado</a>
-                <a href="#"
-                    class="block px-4 py-3 rounded-md text-base font-medium bg-slate-800/50 text-white border border-slate-700">Minha
-                    Carteira</a>
-                <a href="#"
-                    class="block px-4 py-3 rounded-md text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/30">Conta
-                    Corrente</a>
+    <!-- ========================================== -->
+    <!-- ASIDE / DRAWER (MENU LATERAL)              -->
+    <!-- ========================================== -->
 
-                <div class="border-t border-slate-800 my-4"></div>
+    <!-- Overlay Escuro -->
+    <div id="sidebar-overlay" onclick="fecharSidebar()"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[50] opacity-0 pointer-events-none transition-opacity duration-300">
+    </div>
 
-                <div class="relative">
-                    <button onclick="toggleElement('user-mobile-dropdown')"
-                        class="w-full flex items-center justify-between p-3 border border-slate-700 rounded-lg bg-[#0B0F19] hover:bg-slate-800 transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 border border-slate-700">
-                                <i data-lucide="user" class="w-5 h-5"></i>
-                            </div>
-                            <span class="text-base font-semibold text-white">Carlos Henrique</span>
-                        </div>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i>
-                    </button>
+    <!-- Container do Menu Lateral -->
+    <aside id="sidebar"
+        class="fixed top-0 right-0 h-full w-full sm:w-[360px] bg-[#0F172A] border-l border-slate-700 shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
 
-                    <div id="user-mobile-dropdown"
-                        class="hidden mt-2 bg-[#151E2E] border border-slate-700 rounded-lg overflow-hidden animate-[fadeIn_0.1s_ease-out]">
-                        <a href="#"
-                            class="flex items-center px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
-                            <i data-lucide="settings" class="w-5 h-5 mr-3 text-slate-500"></i> Configurações
-                        </a>
-                        <div class="border-t border-slate-800"></div>
-                        <button onclick="confirmarSaida()"
-                            class="w-full flex items-center px-4 py-3 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors text-left">
-                            <i data-lucide="log-out" class="w-5 h-5 mr-3 text-red-400/70"></i> Sair da Conta
-                        </button>
-                    </div>
+        <!-- Header do Aside -->
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-[#151E2E]/30">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-6 h-6 rounded bg-prime-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm shadow-prime-500/20">
+                    P</div>
+                <span class="font-bold text-white tracking-tight">Menu Principal</span>
+            </div>
+            <button onclick="fecharSidebar()"
+                class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Container de Perfil do Usuário -->
+        <div
+            class="p-6 border-b border-slate-800 bg-gradient-to-b from-[#151E2E]/50 to-transparent relative overflow-hidden">
+            <!-- Efeito de brilho de fundo -->
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-prime-500/10 rounded-full blur-2xl pointer-events-none">
+            </div>
+
+            <div class="flex items-center gap-4 mb-5 relative z-10">
+                <div
+                    class="w-14 h-14 rounded-full bg-[#0B0F19] border-2 border-prime-500/50 flex items-center justify-center text-slate-300 shadow-lg">
+                    <i data-lucide="user" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white leading-tight">Carlos Henrique</h3>
+                    <p class="text-xs text-prime-400 font-medium mt-0.5">ID: #4829 &bull; Conta Prime</p>
                 </div>
             </div>
+
+            <div class="flex gap-3 relative z-10">
+                <button
+                    class="flex-1 py-2.5 px-3 text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors border border-slate-700 shadow-sm flex items-center justify-center gap-2">
+                    <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i> Ajustes
+                </button>
+                <button onclick="fecharSidebar(); confirmarSaida()"
+                    class="flex-1 py-2.5 px-3 text-xs font-bold text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors border border-red-500/20 shadow-sm flex items-center justify-center gap-2">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+                </button>
+            </div>
         </div>
-    </nav>
+
+        <!-- Navegação -->
+        <nav class="flex-1 overflow-y-auto p-5 space-y-2 no-scrollbar">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Plataforma</p>
+
+            <a href="./homeInicialHome.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="layout-dashboard"
+                        class="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition-colors"></i> Início
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+
+            <a href="./mercadoDeAçoes.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="line-chart"
+                        class="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition-colors"></i> Mercado
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+
+            <!-- Link Ativo (Minha Carteira) -->
+            <a href="./minhaCarteira.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl bg-prime-500/10 text-prime-400 border border-prime-500/20 font-semibold transition-colors group">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="briefcase" class="w-5 h-5"></i> Minha Carteira
+                </div>
+                <div class="w-1.5 h-1.5 rounded-full bg-prime-500"></div>
+            </a>
+
+            <a href="./contaCorrente.html"
+                class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-medium transition-colors group border border-transparent hover:border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="file-text"
+                        class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors"></i> Conta
+                    Corrente
+                </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors"></i>
+            </a>
+        </nav>
+
+        <!-- Footer do Menu -->
+        <div class="p-5 border-t border-slate-800 bg-[#0B0F19]">
+            <div class="flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
+                <span>&copy; 2026 PrimeInvest</span>
+                <span>&bull;</span>
+                <span class="text-prime-500/70">Ambiente Seguro</span>
+            </div>
+        </div>
+    </aside>
+    <!-- ========================================== -->
+
 
     <!-- Main Content Area -->
     <main class="flex-grow flex flex-col max-w-[1400px] w-full mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
@@ -298,13 +334,13 @@
 
                 <div class="flex gap-3 w-full sm:w-auto">
                     <!-- Botão Histórico de Ordens -->
-                    <button onclick="abrirOffcanvas('offcanvas-ordens')"
+                    <button onclick="abrirOffcanvasOrdens('offcanvas-ordens')"
                         class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm">
                         <i data-lucide="history" class="w-4 h-4"></i>
                         Ordens
                     </button>
                     <!-- Ir para Mercado (Para comprar) -->
-                    <a href="homebroker.html"
+                    <a href="mercadoDeAcoes.html"
                         class="flex-1 sm:flex-none bg-prime-500 hover:bg-prime-400 text-slate-900 font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-prime-500/20 text-sm">
                         <i data-lucide="shopping-cart" class="w-4 h-4"></i>
                         Comprar Mais
@@ -341,7 +377,7 @@
                     <h3 class="text-lg font-bold text-white mb-2">Sua carteira está vazia</h3>
                     <p class="text-slate-400 text-sm max-w-sm mb-6">Você ainda não possui ativos. Acesse o mercado para
                         fazer sua primeira simulação de compra.</p>
-                    <a href="homebroker.html"
+                    <a href="mercadoDeAcoes.html"
                         class="bg-slate-800 hover:bg-slate-700 text-white font-medium py-2.5 px-6 rounded-lg transition-colors border border-slate-700 shadow-sm">Explorar
                         Mercado</a>
                 </div>
@@ -486,12 +522,12 @@
     <!-- OFFCANVAS: HISTÓRICO DE ORDENS E PENDENTES -->
     <!-- ========================================== -->
 
-    <!-- Overlay Escuro -->
-    <div id="offcanvas-overlay" onclick="fecharOffcanvas('offcanvas-ordens')"
+    <!-- Overlay Escuro (Ordens) -->
+    <div id="offcanvas-ordens-overlay" onclick="fecharOffcanvasOrdens('offcanvas-ordens')"
         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[55] hidden transition-opacity duration-300 opacity-0">
     </div>
 
-    <!-- Painel Lateral -->
+    <!-- Painel Lateral (Ordens) -->
     <div id="offcanvas-ordens"
         class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-[#0F172A] border-l border-slate-700 shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 flex flex-col">
 
@@ -499,7 +535,7 @@
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
                 <i data-lucide="history" class="w-5 h-5 text-prime-500"></i> Ordens de Negociação
             </h3>
-            <button onclick="fecharOffcanvas('offcanvas-ordens')"
+            <button onclick="fecharOffcanvasOrdens('offcanvas-ordens')"
                 class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-slate-700">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
@@ -527,41 +563,189 @@
     <script>
         lucide.createIcons();
 
-        // Helpers de UI 
-        function toggleElement(id) { document.getElementById(id).classList.toggle('hidden'); }
-        function abrirOffcanvas(id) {
+        // ==========================================
+        // UI & HELPERS GERAIS (MENUS, TOASTS E MODAIS)
+        // ==========================================
+        function abrirSidebar() {
+            document.getElementById('sidebar-overlay').classList.remove('hidden');
+            document.getElementById('sidebar').classList.add('sidebar-active');
+
+            setTimeout(() => {
+                document.getElementById('sidebar-overlay').classList.add('overlay-active');
+            }, 10);
+        }
+
+        function fecharSidebar() {
+            document.getElementById('sidebar').classList.remove('sidebar-active');
+            document.getElementById('sidebar-overlay').classList.remove('overlay-active');
+
+            setTimeout(() => {
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+            }, 300);
+        }
+
+        // Modal de Aviso, Confirmação e Ação de Sair
+        function abrirModal(id) { document.getElementById(id).classList.add('modal-active'); }
+        function fecharElemento(id) { document.getElementById(id).classList.remove('modal-active'); }
+
+        function mostrarAviso(msg, titulo = 'Aviso') {
+            document.getElementById('alert-title').innerText = titulo;
+            document.getElementById('alert-message').innerText = msg;
+            abrirModal('modal-alert');
+        }
+
+        function mostrarToast(msg, tipo = 'sucesso') { /* Omitido, usa console log como base para simulação */ console.log(`TOAST [${tipo}]: ${msg}`); }
+
+        let cbConfirm = null;
+        function mostrarConfirmacao(msg, titulo, tipoAcao, callback) {
+            document.getElementById('confirm-title').innerText = titulo;
+            document.getElementById('confirm-message').innerText = msg;
+
+            const btn = document.getElementById('btn-confirm-action');
+            const bg = document.getElementById('confirm-icon-bg');
+            const icon = document.getElementById('confirm-icon');
+
+            if (tipoAcao === 'perigo') {
+                btn.className = "flex-1 py-3 rounded-lg bg-red-600 text-white font-bold hover:bg-red-500 shadow-lg";
+                bg.className = "w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4";
+                icon.innerHTML = '<i data-lucide="alert-triangle" class="w-7 h-7 text-red-500"></i>';
+            } else {
+                btn.className = "flex-1 py-3 rounded-lg bg-prime-500 text-slate-900 font-bold hover:bg-prime-400 shadow-lg";
+                bg.className = "w-14 h-14 rounded-full bg-prime-500/10 border border-prime-500/20 flex items-center justify-center mx-auto mb-4";
+                icon.innerHTML = '<i data-lucide="help-circle" class="w-7 h-7 text-prime-500"></i>';
+            }
+            cbConfirm = callback;
+            lucide.createIcons();
+            abrirModal('modal-confirm');
+        }
+
+        function executarConfirm() {
+            fecharElemento('modal-confirm');
+            if (cbConfirm) cbConfirm();
+        }
+
+        function confirmarSaida() {
+            fecharSidebar();
+            mostrarConfirmacao("Deseja sair do sistema? Suas ordens continuarão ativas.", "Sair da Conta", "perigo", () => {
+                window.location.href = "../pagina-login.html";
+            });
+        }
+
+        // ==========================================
+        // LÓGICA DE ORDENS (OFFCANVAS)
+        // ==========================================
+        function abrirOffcanvasOrdens(id) {
             document.getElementById(id).classList.add('offcanvas-active');
-            const overlay = document.getElementById('offcanvas-overlay');
+            const overlay = document.getElementById('offcanvas-ordens-overlay');
             overlay.classList.remove('hidden');
             setTimeout(() => overlay.classList.add('opacity-100'), 10);
             renderizarOrdens(); // Atualiza a lista ao abrir
         }
-        function fecharOffcanvas(id) {
+
+        function fecharOffcanvasOrdens(id) {
             document.getElementById(id).classList.remove('offcanvas-active');
-            const overlay = document.getElementById('offcanvas-overlay');
+            const overlay = document.getElementById('offcanvas-ordens-overlay');
             overlay.classList.remove('opacity-100');
             setTimeout(() => overlay.classList.add('hidden'), 300);
         }
-        function abrirModal(id) { document.getElementById(id).classList.add('modal-active'); }
-        function fecharElemento(id) { document.getElementById(id).classList.remove('modal-active'); }
 
-        // Custom Alert e Confirm e Toast já implementados no passo anterior...
-        function mostrarAviso(msg, titulo = 'Aviso') { document.getElementById('alert-title').innerText = titulo; document.getElementById('alert-message').innerText = msg; abrirModal('modal-alert'); }
-        function mostrarToast(msg, tipo = 'sucesso') { /* Igual a HomeBroker - Suprimido por brevidade no code block, mas funcionante */ console.log(`TOAST [${tipo}]: ${msg}`); }
+        function trocarAbaOrdens(aba) {
+            state.abaOrdens = aba;
 
-        let cbConfirm = null;
-        function mostrarConfirmacao(msg, titulo, tipoAcao, callback) {
-            document.getElementById('confirm-title').innerText = titulo; document.getElementById('confirm-message').innerText = msg;
-            const btn = document.getElementById('btn-confirm-action'); const bg = document.getElementById('confirm-icon-bg'); const icon = document.getElementById('confirm-icon');
-            if (tipoAcao === 'perigo') {
-                btn.className = "flex-1 py-3 rounded-lg bg-red-600 text-white font-bold hover:bg-red-500 shadow-lg"; bg.className = "w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4"; icon.innerHTML = '<i data-lucide="alert-triangle" class="w-7 h-7 text-red-500"></i>';
+            const btnP = document.getElementById('aba-pendentes');
+            const btnH = document.getElementById('aba-historico');
+
+            if (aba === 'pendentes') {
+                btnP.className = "flex-1 py-3 text-sm font-bold text-prime-500 border-b-2 border-prime-500 bg-slate-800/30";
+                btnH.className = "flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors border-b border-transparent";
             } else {
-                btn.className = "flex-1 py-3 rounded-lg bg-prime-500 text-slate-900 font-bold hover:bg-prime-400 shadow-lg"; bg.className = "w-14 h-14 rounded-full bg-prime-500/10 border border-prime-500/20 flex items-center justify-center mx-auto mb-4"; icon.innerHTML = '<i data-lucide="help-circle" class="w-7 h-7 text-prime-500"></i>';
+                btnH.className = "flex-1 py-3 text-sm font-bold text-prime-500 border-b-2 border-prime-500 bg-slate-800/30";
+                btnP.className = "flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors border-b border-transparent";
             }
-            cbConfirm = callback; lucide.createIcons(); abrirModal('modal-confirm');
+            renderizarOrdens();
         }
-        function executarConfirm() { fecharElemento('modal-confirm'); if (cbConfirm) cbConfirm(); }
-        function confirmarSaida() { mostrarConfirmacao("Deseja sair do sistema?", "Sair da Conta", "perigo", () => { window.location.href = "../pagina-login.html"; }); }
+
+        function renderizarOrdens() {
+            const container = document.getElementById('lista-ordens');
+            container.innerHTML = '';
+
+            // Filtra conforme a aba ativa
+            const filtradas = state.ordens.filter(o => {
+                if (state.abaOrdens === 'pendentes') return o.status === 'pendente';
+                return o.status !== 'pendente';
+            });
+
+            if (filtradas.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10">
+                        <i data-lucide="inbox" class="w-10 h-10 text-slate-600 mx-auto mb-3"></i>
+                        <p class="text-sm text-slate-400">Nenhuma ordem encontrada nesta categoria.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            filtradas.forEach(ordem => {
+                const card = document.createElement('div');
+                card.className = "bg-[#151E2E] border border-slate-700/60 rounded-lg p-3 shadow-sm";
+
+                const isCompra = ordem.tipoOrdem === 'compra';
+                const corBadge = isCompra ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' : 'text-purple-400 bg-purple-500/10 border-purple-500/20';
+
+                let htmlStatus = '';
+                if (ordem.status === 'pendente') {
+                    htmlStatus = `
+                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
+                            <span class="text-[10px] uppercase text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded">Aguardando Gatilho</span>
+                            <button onclick="cancelarOrdem('${ordem._id}')" class="text-xs text-red-400 hover:text-red-300 font-medium">Cancelar</button>
+                        </div>`;
+                } else if (ordem.status === 'executada') {
+                    htmlStatus = `
+                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
+                            <span class="text-[10px] uppercase text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">Executada no min ${ordem.minutoExecucao}</span>
+                        </div>`;
+                } else {
+                    htmlStatus = `
+                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
+                            <span class="text-[10px] uppercase text-slate-500 font-bold bg-slate-500/10 px-2 py-0.5 rounded">Cancelada</span>
+                        </div>`;
+                }
+
+                const priceLabel = ordem.tipoExecucao === 'mercado' ? 'A Mercado' : `R$ ${ordem.precoReferencia.toFixed(2)}`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-bold text-white text-sm">${ordem.ticker}</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase ${corBadge}">${ordem.tipoOrdem}</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Min. Registro: ${ordem.minutoRegistro}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-white text-sm">${ordem.quantidade} UN</p>
+                            <p class="text-xs font-medium text-slate-400">${priceLabel}</p>
+                        </div>
+                    </div>
+                    ${htmlStatus}
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        async function cancelarOrdem(id) {
+            mostrarConfirmacao("Deseja realmente cancelar esta ordem condicional?", "Cancelar Ordem", "perigo", () => {
+                // await fetch(`/api/ordens/${id}/cancelar`, { method: 'POST' ... });
+
+                // MOCK visual: move a ordem de status
+                const ordem = state.ordens.find(o => o._id === id);
+                if (ordem) ordem.status = 'cancelada';
+                renderizarOrdens();
+                console.log("CANCELADA ORDEM ID:", id);
+            });
+        }
+
 
         // ==========================================
         // ESTADO GLOBAL DA CARTEIRA
@@ -569,8 +753,8 @@
         let state = {
             minutoAtual: 0,
             saldoDisponivel: 15000.00,
-            ativos: [],     // Ações na carteira do usuário
-            ordens: [],     // Hitórico de ordens
+            ativos: [],
+            ordens: [],
             abaOrdens: 'pendentes'
         };
 
@@ -766,106 +950,6 @@
                 mostrarConfirmacao(`Venda de ${payload.quantidade} ${payload.ticker} processada com sucesso no mercado!`, "Sucesso!", "sucesso", null);
                 // No mundo real, recarregar a carteira (carregarDadosCarteira())
             }
-        }
-
-        // ==========================================
-        // 4. LÓGICA DE ORDENS (OFFCANVAS)
-        // ==========================================
-        function trocarAbaOrdens(aba) {
-            state.abaOrdens = aba;
-
-            const btnP = document.getElementById('aba-pendentes');
-            const btnH = document.getElementById('aba-historico');
-
-            if (aba === 'pendentes') {
-                btnP.className = "flex-1 py-3 text-sm font-bold text-prime-500 border-b-2 border-prime-500 bg-slate-800/30";
-                btnH.className = "flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors border-b border-transparent";
-            } else {
-                btnH.className = "flex-1 py-3 text-sm font-bold text-prime-500 border-b-2 border-prime-500 bg-slate-800/30";
-                btnP.className = "flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors border-b border-transparent";
-            }
-            renderizarOrdens();
-        }
-
-        function renderizarOrdens() {
-            const container = document.getElementById('lista-ordens');
-            container.innerHTML = '';
-
-            // Filtra conforme a aba ativa
-            const filtradas = state.ordens.filter(o => {
-                if (state.abaOrdens === 'pendentes') return o.status === 'pendente';
-                return o.status !== 'pendente';
-            });
-
-            if (filtradas.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-10">
-                        <i data-lucide="inbox" class="w-10 h-10 text-slate-600 mx-auto mb-3"></i>
-                        <p class="text-sm text-slate-400">Nenhuma ordem encontrada nesta categoria.</p>
-                    </div>`;
-                lucide.createIcons();
-                return;
-            }
-
-            filtradas.forEach(ordem => {
-                const card = document.createElement('div');
-                card.className = "bg-[#151E2E] border border-slate-700/60 rounded-lg p-3 shadow-sm";
-
-                const isCompra = ordem.tipoOrdem === 'compra';
-                const corBadge = isCompra ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' : 'text-purple-400 bg-purple-500/10 border-purple-500/20';
-
-                let htmlStatus = '';
-                if (ordem.status === 'pendente') {
-                    htmlStatus = `
-                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
-                            <span class="text-[10px] uppercase text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded">Aguardando Gatilho</span>
-                            <button onclick="cancelarOrdem('${ordem._id}')" class="text-xs text-red-400 hover:text-red-300 font-medium">Cancelar</button>
-                        </div>`;
-                } else if (ordem.status === 'executada') {
-                    htmlStatus = `
-                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
-                            <span class="text-[10px] uppercase text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">Executada no min ${ordem.minutoExecucao}</span>
-                        </div>`;
-                } else {
-                    htmlStatus = `
-                        <div class="mt-3 pt-3 border-t border-slate-700/60 flex justify-between items-center">
-                            <span class="text-[10px] uppercase text-slate-500 font-bold bg-slate-500/10 px-2 py-0.5 rounded">Cancelada</span>
-                        </div>`;
-                }
-
-                const priceLabel = ordem.tipoExecucao === 'mercado' ? 'A Mercado' : `R$ ${ordem.precoReferencia.toFixed(2)}`;
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-bold text-white text-sm">${ordem.ticker}</span>
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase ${corBadge}">${ordem.tipoOrdem}</span>
-                            </div>
-                            <p class="text-xs text-slate-400">Min. Registro: ${ordem.minutoRegistro}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-bold text-white text-sm">${ordem.quantidade} UN</p>
-                            <p class="text-xs font-medium text-slate-400">${priceLabel}</p>
-                        </div>
-                    </div>
-                    ${htmlStatus}
-                `;
-                container.appendChild(card);
-            });
-            lucide.createIcons();
-        }
-
-        async function cancelarOrdem(id) {
-            mostrarConfirmacao("Deseja realmente cancelar esta ordem condicional?", "Cancelar Ordem", "perigo", () => {
-                // await fetch(`/api/ordens/${id}/cancelar`, { method: 'POST' ... });
-
-                // MOCK visual: move a ordem de status
-                const ordem = state.ordens.find(o => o._id === id);
-                if (ordem) ordem.status = 'cancelada';
-                renderizarOrdens();
-                console.log("CANCELADA ORDEM ID:", id);
-            });
         }
 
         // Utils
